@@ -1,0 +1,47 @@
+/* 4. Menu lateral ----------------------------------------------------- */
+.menu-lateral {
+  position: fixed;
+  top: var(--altura-barra);
+  bottom: var(--altura-player);
+  left: 0;
+  z-index: 40;
+  width: var(--largura-menu);
+  padding: 24px;
+  overflow-y: auto;
+  background: var(--fundo-cartao);
+  border-right: 1px solid var(--borda);
+  scrollbar-width: thin;
+  scrollbar-color: var(--fundo-hover) transparent;
+  transition: transform 0.3s ease;
+}
+.menu-grupo + .menu-grupo { margin-top: 24px; }
+.menu-titulo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--texto-claro);
+}
+.menu-titulo .botao-icone { width: 24px; height: 24px; font-size: 16px; border-radius: 6px; }
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  color: var(--texto-secundario);
+  transition: background var(--transicao), color var(--transicao);
+}
+.menu-item i { font-size: 18px; width: 20px; text-align: center; }
+.menu-item img { width: 32px; height: 32px; border-radius: 6px; object-fit: cover; }
+.menu-item:hover { background: var(--fundo-suave); color: var(--texto); }
+.menu-item[aria-current="page"] { background: rgba(99, 102, 241, 0.12); color: var(--cor-principal); font-weight: 500; }
+.menu-item + .menu-item { margin-top: 4px; }
+.menu-item.pequeno { font-size: 14px; }
+
+.menu-fundo { display: none; }

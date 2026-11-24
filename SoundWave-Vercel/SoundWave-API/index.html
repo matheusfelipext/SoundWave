@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biblioteca da conta · SoundWave</title>
+
+  <!-- Fonte do logo (precisa de internet; sem ela, usa uma fonte cursiva do sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+  <!-- Ícones (Remix Icon, salvos na pasta css/icones) e estilo do site -->
+  <link rel="stylesheet" href="css/icones/icones.css">
+  <!-- estilo.css só importa os outros arquivos da pasta css, na ordem certa -->
+  <link rel="stylesheet" href="css/estilo.css">
+  <script defer src="js/spotify/inicio.js"></script>
+  <script defer src="js/spotify/auth.js"></script>
+  <script defer src="js/spotify/api.js"></script>
+  <script defer src="js/spotify/library.js"></script>
+  <script defer src="js/spotify/search.js"></script>
+  <script defer src="js/spotify/player.js"></script>
+  <script defer src="js/spotify/navigation.js"></script>
+  <script defer src="js/spotify/device-music.js"></script>
+  <script defer src="js/spotify/public-playlists.js"></script>
+  <script defer src="js/spotify/app.js"></script>
+</head>
+<body>
+
+  <!-- Estados controlados só por CSS: tema, menu no celular e play/pause -->
+  <input class="estado" type="checkbox" id="tema-escuro" aria-label="Tema escuro">
+  <input class="estado" type="checkbox" id="menu-aberto">
+<!-- ===== Barra superior ===== -->
+  <header class="barra-superior">
+    <div class="barra-esquerda">
+      <label class="botao-icone botao-menu" for="menu-aberto" aria-label="Abrir menu"><i class="ri-menu-line"></i></label>
+      <a class="logo" href="index.html">
+        <span class="logo-icone"><i class="ri-music-2-line"></i></span>
+        <span class="logo-nome">SoundWave</span>
+      </a>
+      <form class="busca" action="explorar.html" method="get" role="search">
+        <i class="ri-search-line"></i>
+        <input type="search" name="q" placeholder="Buscar músicas, artistas ou álbuns..." aria-label="Buscar">
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+    <div class="barra-direita">
+      <a class="botao-icone so-celular" href="explorar.html" aria-label="Buscar"><i class="ri-search-line"></i></a>
+      <a class="botao-icone notificacoes" href="recentes.html" aria-label="Notificações"><i class="ri-notification-line"></i></a>
+      <label class="interruptor" for="tema-escuro" title="Alternar tema escuro"></label>
+      <a class="perfil" href="curtidas.html">
+        <img src="img/avatar.svg" alt="Foto de perfil">
+        <span class="perfil-nome">Conecte o Spotify <i class="ri-arrow-down-s-line"></i></span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Fundo escuro que fecha o menu no celular -->
+  <label class="menu-fundo" for="menu-aberto" aria-label="Fechar menu"></label>
+
+  <!-- ===== Menu lateral ===== -->
+  <nav class="menu-lateral" aria-label="Menu principal">
+    <div class="menu-grupo">
+      <a class="menu-item" href="index.html" aria-current="page"><i class="ri-home-5-line"></i><span>Biblioteca da conta</span></a>
+      <a class="menu-item" href="explorar.html"><i class="ri-compass-3-line"></i><span>Explorar</span></a>
+      <a class="menu-item" href="radio.html"><i class="ri-radio-line"></i><span>Rádio</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minha Biblioteca</h3>
+      <a class="menu-item" href="curtidas.html"><i class="ri-heart-line"></i><span>Músicas Curtidas</span></a>
+      <a class="menu-item" href="downloads.html"><i class="ri-download-line"></i><span>Downloads</span></a>
+      <a class="menu-item" href="recentes.html"><i class="ri-history-line"></i><span>Tocadas Recentemente</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minhas Playlists <a class="botao-icone" href="playlist.html" aria-label="Ver playlists"><i class="ri-play-list-line"></i></a></h3>
+      <div data-spotify-playlists></div>
+    </div>
+  </nav>
+
+  <!-- ===== Conteúdo ===== -->
+  <main class="conteudo">
+
+      <section class="destaque" style="background-image: url('img/hero.svg');">
+        <div class="destaque-texto">
+          
+          <h1>Sua música, do seu jeito</h1>
+          <p>Pesquise músicas, artistas e álbuns reais do catálogo oficial do Spotify.</p>
+          <a class="botao-principal" href="explorar.html">Explorar músicas</a>
+        </div>
+      </section>
+
+      <section class="secao">
+        <div class="grade grade-6">
+        <a class="acesso-rapido" href="curtidas.html"><span class="gradiente-rosa"><i class="ri-heart-fill"></i></span><span>Curtidas</span></a>
+<a class="acesso-rapido" href="recentes.html"><span class="gradiente-azul"><i class="ri-history-line"></i></span><span>Recentes</span></a>
+<a class="acesso-rapido" href="downloads.html"><span class="gradiente-verde"><i class="ri-download-2-line"></i></span><span>Downloads</span></a>
+<a class="acesso-rapido" href="explorar.html"><span class="gradiente-roxo"><i class="ri-compass-3-line"></i></span><span>Explorar</span></a>
+<a class="acesso-rapido" href="radio.html"><span class="gradiente-laranja"><i class="ri-radio-line"></i></span><span>Rádio</span></a>
+<a class="acesso-rapido" href="playlist.html"><span class="gradiente-teal"><i class="ri-play-list-line"></i></span><span>Playlists</span></a>
+        </div>
+      </section>
+
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Músicas salvas</h2>
+          <a class="ver-tudo" href="curtidas.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-5" data-spotify-tracks></div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Tocadas recentemente</h2>
+          <a class="ver-tudo" href="recentes.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-4" data-spotify-recent></div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Artistas da sua biblioteca</h2>
+          <a class="ver-tudo" href="explorar.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-6 grade-artistas" data-spotify-artists></div>
+      </section>
+
+  </main>
+
+  <!-- ===== Player ===== -->
+  <footer class="player">
+    <div class="player-musica">
+      <img src="img/tocando-agora.svg" alt="Capa da música atual">
+      <div>
+        <h4>Nenhuma música selecionada</h4>
+        <p>Conecte o Spotify para começar</p>
+      </div>
+      <button type="button" class="curtir botao-icone" data-current-favorite aria-label="Salvar música atual" disabled><i class="ri-heart-line"></i><i class="ri-heart-fill"></i></button>
+    </div>
+    <div class="player-centro">
+      <div class="player-botoes">
+        <label class="botao-icone" title="Aleatório"><input class="estado" type="checkbox"><i class="ri-shuffle-line"></i></label>
+        <a class="botao-icone" href="#" aria-label="Anterior"><i class="ri-skip-back-line"></i></a>
+        <button type="button" class="botao-tocar" aria-label="Tocar ou pausar"><i class="ri-pause-line"></i><i class="ri-play-fill"></i></button>
+        <a class="botao-icone" href="#" aria-label="Próxima"><i class="ri-skip-forward-line"></i></a>
+        <label class="botao-icone" title="Repetir"><input class="estado" type="checkbox"><i class="ri-repeat-line"></i></label>
+      </div>
+      <div class="player-progresso">
+        <span>0:00</span>
+        <div class="barra-progresso"><span></span></div>
+        <span>0:00</span>
+      </div>
+    </div>
+    <div class="player-direita">
+      <a class="botao-icone extra" href="playlist.html" aria-label="Playlists"><i class="ri-play-list-line"></i></a>
+      <button type="button" class="botao-icone extra" data-fullscreen aria-label="Tela cheia"><i class="ri-fullscreen-line"></i></button>
+      <div class="volume" title="Volume: 75%"><i class="ri-volume-up-line"></i><div class="volume-barra"><span></span></div></div>
+    </div>
+  </footer>
+
+<!-- Cópias das áreas centrais para navegação ao abrir por arquivo. -->
+<template data-page="index.html" data-title="Biblioteca da conta · SoundWave" data-active="index.html"><main class="conteudo">
+
+      <section class="destaque" style="background-image: url('img/hero.svg');">
+        <div class="destaque-texto">
+          
+          <h1>Sua música, do seu jeito</h1>
+          <p>Pesquise músicas, artistas e álbuns reais do catálogo oficial do Spotify.</p>
+          <a class="botao-principal" href="explorar.html">Explorar músicas</a>
+        </div>
+      </section>
+
+      <section class="secao">
+        <div class="grade grade-6">
+        <a class="acesso-rapido" href="curtidas.html"><span class="gradiente-rosa"><i class="ri-heart-fill"></i></span><span>Curtidas</span></a>
+<a class="acesso-rapido" href="recentes.html"><span class="gradiente-azul"><i class="ri-history-line"></i></span><span>Recentes</span></a>
+<a class="acesso-rapido" href="downloads.html"><span class="gradiente-verde"><i class="ri-download-2-line"></i></span><span>Downloads</span></a>
+<a class="acesso-rapido" href="explorar.html"><span class="gradiente-roxo"><i class="ri-compass-3-line"></i></span><span>Explorar</span></a>
+<a class="acesso-rapido" href="radio.html"><span class="gradiente-laranja"><i class="ri-radio-line"></i></span><span>Rádio</span></a>
+<a class="acesso-rapido" href="playlist.html"><span class="gradiente-teal"><i class="ri-play-list-line"></i></span><span>Playlists</span></a>
+        </div>
+      </section>
+
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Músicas salvas</h2>
+          <a class="ver-tudo" href="curtidas.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-5" data-spotify-tracks></div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Tocadas recentemente</h2>
+          <a class="ver-tudo" href="recentes.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-4" data-spotify-recent></div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Artistas da sua biblioteca</h2>
+          <a class="ver-tudo" href="explorar.html">Ver tudo</a>
+        </div>
+        <div class="grade grade-6 grade-artistas" data-spotify-artists></div>
+      </section>
+
+  </main></template>
+<template data-page="explorar.html" data-title="Explorar · SoundWave" data-active="explorar.html"><main class="conteudo">
+
+      <div class="cabecalho-pagina">
+        <div><h1 class="titulo-pagina">Explorar</h1><p class="subtitulo-pagina">Encontre músicas, artistas e álbuns no Spotify.</p></div>
+        <form class="busca busca-mobile" action="explorar.html" method="get" role="search">
+          <label><input type="search" name="q" placeholder="Buscar no Spotify" aria-label="Buscar no Spotify" required></label>
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Estilos musicais</h2>
+          
+        </div>
+        <div class="grade grade-5" data-spotify-genres>
+        <a class="genero gradiente-rosa" href="explorar.html?genre=pop" data-genre="pop">Pop</a>
+<a class="genero gradiente-vermelho" href="explorar.html?genre=rock" data-genre="rock">Rock</a>
+<a class="genero gradiente-lima" href="explorar.html?genre=mpb" data-genre="mpb">MPB</a>
+<a class="genero gradiente-roxo" href="explorar.html?genre=electronic" data-genre="electronic">Eletrônica</a>
+<a class="genero gradiente-cinza" href="explorar.html?genre=hip-hop" data-genre="hip-hop">Hip-Hop</a>
+<a class="genero gradiente-amarelo" href="explorar.html?genre=jazz" data-genre="jazz">Jazz</a>
+<a class="genero gradiente-laranja" href="explorar.html?genre=sertanejo" data-genre="sertanejo">Sertanejo</a>
+<a class="genero gradiente-fucsia" href="explorar.html?genre=funk" data-genre="funk">Funk</a>
+<a class="genero gradiente-azul" href="explorar.html?genre=indie" data-genre="indie">Indie</a>
+<a class="genero gradiente-teal" href="explorar.html?genre=forro" data-genre="forro">Forró</a>
+          <a class="genero gradiente-rosa" href="explorar.html?genre=pagode" data-genre="pagode">Pagode</a>
+          <a class="genero gradiente-lima" href="explorar.html?genre=samba" data-genre="samba">Samba</a>
+          <a class="genero gradiente-fucsia" href="explorar.html?genre=funk%20carioca" data-genre="funk carioca">Funk brasileiro</a>
+          <a class="genero gradiente-roxo" href="explorar.html?genre=trap" data-genre="trap">Trap</a>
+          <a class="genero gradiente-teal" href="explorar.html?genre=reggae" data-genre="reggae">Reggae</a>
+          <a class="genero gradiente-cinza" href="explorar.html?genre=metal" data-genre="metal">Metal</a>
+          <a class="genero gradiente-azul" href="explorar.html?genre=blues" data-genre="blues">Blues</a>
+          <a class="genero gradiente-laranja" href="explorar.html?genre=gospel" data-genre="gospel">Gospel</a>
+        </div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Faixas encontradas</h2>
+          
+        </div>
+        <div class="grade catalogo-compacto" data-spotify-search-tracks></div>
+        <button type="button" class="spotify-load-more" data-spotify-search-more hidden>Carregar mais resultados</button>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Artistas encontrados</h2>
+          
+        </div>
+        <div class="grade grade-6 grade-artistas" data-spotify-search-artists></div>
+      </section>
+
+      <section class="secao">
+        <div class="secao-cabecalho"><h2>Álbuns</h2></div>
+        <div class="grade catalogo-compacto" data-spotify-search-albums></div>
+      </section>  </main></template>
+<template data-page="artista.html" data-title="Artista · SoundWave" data-active=""><main class="conteudo">
+
+      <section class="destaque" data-spotify-artist-hero style="background-image: url('img/lua-caicara.svg');">
+        <div class="destaque-texto">
+          <p class="destaque-tipo">Spotify</p>
+          <h1>Artista Spotify</h1>
+          <p>Pesquise e abra um artista do catálogo Spotify.</p>
+          <a class="botao-principal" href="explorar.html">Pesquisar artista</a>
+        </div>
+      </section>
+      <section class="secao"><div class="secao-cabecalho"><h2>Faixas deste artista</h2></div><ol class="lista-musicas" data-spotify-artist-tracks></ol></section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Discografia</h2>
+          
+        </div>
+        <div class="grade grade-5" data-spotify-artist-albums></div>
+      </section>
+
+  </main></template>
+<template data-page="curtidas.html" data-title="Músicas Curtidas · SoundWave" data-active="curtidas.html"><main class="conteudo">
+
+      <section class="destaque" style="background-image: url('img/minhas-favoritas.svg');">
+        <div class="destaque-texto">
+          <p class="destaque-tipo">Playlist</p>
+          <h1>Músicas Curtidas</h1>
+          <p>Suas músicas salvas no Spotify.</p>
+          <a class="botao-principal" href="#">Tocar tudo</a>
+        </div>
+      </section>
+      <section class="secao"><ol class="lista-musicas" data-spotify-favorites></ol></section>
+      <section class="secao"><div class="secao-cabecalho"><h2>Álbuns salvos</h2></div><div class="grade grade-5" data-spotify-saved-albums></div></section>
+
+  </main></template>
+<template data-page="playlist.html" data-title="Playlists · SoundWave" data-active=""><main class="conteudo">
+
+      <section class="destaque" style="background-image: url('img/minhas-favoritas.svg');">
+        <div class="destaque-texto">
+          <p class="destaque-tipo">Playlist</p>
+          <h1>Suas playlists</h1>
+          <p>Encontre playlists no Spotify ou abra uma da sua biblioteca.</p>
+          <a class="botao-principal" href="#" hidden>Tocar</a>
+        </div>
+      </section>
+      <section class="secao" data-public-discovery>
+        <div class="secao-cabecalho"><h2>Playlists públicas do Spotify</h2></div>
+        <form class="busca-playlist-publica">
+          <label for="nome-playlist">Nome ou link da playlist</label>
+          <div><input id="nome-playlist" name="playlist" type="text" placeholder="Ex.: sertanejo ou https://open.spotify.com/playlist/…" required>
+          <button type="submit" class="botao-principal">Buscar ou abrir</button></div>
+        </form>
+        <div class="atalhos-playlists">
+          <a href="playlist.html?publica=37i9dQZEVXbMXbN3EUUhlg">Top 50 Brasil</a>
+          <a href="playlist.html?publica=37i9dQZEVXbMDoHDwVN2tF">Top 50 Global</a>
+        </div>
+        <p role="status"></p>
+        <div data-preview></div>
+        <div class="grade catalogo-compacto" data-results></div>
+        <button class="spotify-load-more" type="button" data-more hidden>Carregar mais playlists</button>
+      </section>
+      <section class="secao" data-playlist-embed hidden></section>
+      <section class="secao"><div class="secao-cabecalho" data-account-playlists-heading hidden><h2>Playlists da sua conta</h2></div>
+      <div class="grade grade-5" data-spotify-playlists-page></div>
+      <ol class="lista-musicas" data-spotify-playlist-items></ol></section>
+
+  </main></template>
+<template data-page="recentes.html" data-title="Tocadas Recentemente · SoundWave" data-active="recentes.html"><main class="conteudo">
+
+      <div class="cabecalho-pagina">
+        <div><h1 class="titulo-pagina">Tocadas recentemente</h1><p class="subtitulo-pagina">Histórico de reprodução da sua conta Spotify.</p></div>
+      </div>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Faixas recentes</h2>
+          
+        </div>
+        <div class="grade grade-4" data-spotify-recent></div>
+      </section>
+      <section class="secao"><div class="secao-cabecalho"><h2>Músicas tocadas</h2></div><ol class="lista-musicas" data-spotify-recent-tracks></ol></section>
+
+  </main></template>
+<template data-page="downloads.html" data-title="Downloads · SoundWave" data-active="downloads.html"><main class="conteudo">
+
+      <div class="cabecalho-pagina">
+        <div><h1 class="titulo-pagina">Downloads</h1><p class="subtitulo-pagina">Guarde e toque músicas do seu computador ou celular neste navegador.</p></div>
+      </div>
+      <section class="secao" data-device-library>
+        <label for="arquivos-audio"><strong>Importar músicas do dispositivo</strong></label>
+        <input id="arquivos-audio" type="file" multiple accept="audio/*,.mp3,.m4a,.aac,.wav,.flac,.ogg,.opus,.weba,.aif,.aiff">
+        <p class="subtitulo-pagina">Os arquivos ficam neste aparelho. Limpar os dados do site apaga as cópias importadas.</p>
+        <p role="status"></p>
+        <h2>Músicas neste dispositivo</h2>
+        <ul class="arquivos-locais"></ul>
+      </section>
+  </main></template>
+<template data-page="radio.html" data-title="Rádio · SoundWave" data-active="radio.html"><main class="conteudo">
+
+      <section class="destaque" style="background-image: url('img/radio-eletronica.svg');">
+        <div class="destaque-texto">
+          <p class="destaque-tipo">Spotify</p>
+          <h1>Rádio por estilo</h1>
+          <p>Pesquise faixas reais do catálogo Spotify por estilo musical.</p>
+          
+        </div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Atalhos de estilo</h2>
+          
+        </div>
+        <div class="grade grade-3" data-spotify-radio>
+        <a class="estacao" href="explorar.html?genre=mpb" data-genre="mpb">
+          <img src="img/radio-mpb.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo MPB</h3><p>Pesquise faixas de MPB no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+<a class="estacao" href="explorar.html?genre=rock" data-genre="rock">
+          <img src="img/radio-rock.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo Rock</h3><p>Pesquise faixas de rock no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+<a class="estacao" href="explorar.html?genre=electronic" data-genre="electronic">
+          <img src="img/radio-eletronica.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo Eletrônica</h3><p>Pesquise faixas eletrônicas no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+<a class="estacao" href="explorar.html?genre=jazz" data-genre="jazz">
+          <img src="img/radio-jazz.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo Jazz</h3><p>Pesquise faixas de jazz no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+<a class="estacao" href="explorar.html?genre=sertanejo" data-genre="sertanejo">
+          <img src="img/radio-sertanejo.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo Sertanejo</h3><p>Pesquise faixas sertanejas no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+<a class="estacao" href="explorar.html?genre=funk" data-genre="funk">
+          <img src="img/radio-funk.svg" alt="">
+          <span class="estacao-texto"><span class="ao-vivo">Pesquisar</span><h3>Estilo Funk</h3><p>Pesquise faixas de funk no Spotify</p></span>
+          <span class="estacao-play"><i class="ri-play-fill"></i></span>
+        </a>
+        </div>
+      </section>
+
+      <section class="secao">
+        <div class="secao-cabecalho"><h2>Faixas encontradas</h2></div>
+        <div class="grade grade-5" data-spotify-radio-results></div>
+      </section>  </main></template>
+</body>
+</html>

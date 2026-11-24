@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads · SoundWave</title>
+
+  <!-- Fonte do logo (precisa de internet; sem ela, usa uma fonte cursiva do sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+  <!-- Ícones (Remix Icon, salvos na pasta css/icones) e estilo do site -->
+  <link rel="stylesheet" href="css/icones/icones.css">
+  <!-- estilo.css só importa os outros arquivos da pasta css, na ordem certa -->
+  <link rel="stylesheet" href="css/estilo.css">
+  <script defer src="js/spotify/inicio.js"></script>
+  <script defer src="js/spotify/auth.js"></script>
+  <script defer src="js/spotify/api.js"></script>
+  <script defer src="js/spotify/library.js"></script>
+  <script defer src="js/spotify/search.js"></script>
+  <script defer src="js/spotify/player.js"></script>
+  <script defer src="js/spotify/navigation.js"></script>
+  <script defer src="js/spotify/device-music.js"></script>
+  <script defer src="js/spotify/public-playlists.js"></script>
+  <script defer src="js/spotify/app.js"></script>
+</head>
+<body>
+
+  <!-- Estados controlados só por CSS: tema, menu no celular e play/pause -->
+  <input class="estado" type="checkbox" id="tema-escuro" aria-label="Tema escuro">
+  <input class="estado" type="checkbox" id="menu-aberto">
+<!-- ===== Barra superior ===== -->
+  <header class="barra-superior">
+    <div class="barra-esquerda">
+      <label class="botao-icone botao-menu" for="menu-aberto" aria-label="Abrir menu"><i class="ri-menu-line"></i></label>
+      <a class="logo" href="index.html">
+        <span class="logo-icone"><i class="ri-music-2-line"></i></span>
+        <span class="logo-nome">SoundWave</span>
+      </a>
+      <form class="busca" action="explorar.html" method="get" role="search">
+        <i class="ri-search-line"></i>
+        <input type="search" name="q" placeholder="Buscar músicas, artistas ou álbuns..." aria-label="Buscar">
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+    <div class="barra-direita">
+      <a class="botao-icone so-celular" href="explorar.html" aria-label="Buscar"><i class="ri-search-line"></i></a>
+      <a class="botao-icone notificacoes" href="recentes.html" aria-label="Notificações"><i class="ri-notification-line"></i></a>
+      <label class="interruptor" for="tema-escuro" title="Alternar tema escuro"></label>
+      <a class="perfil" href="curtidas.html">
+        <img src="img/avatar.svg" alt="Foto de perfil">
+        <span class="perfil-nome">Conecte o Spotify <i class="ri-arrow-down-s-line"></i></span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Fundo escuro que fecha o menu no celular -->
+  <label class="menu-fundo" for="menu-aberto" aria-label="Fechar menu"></label>
+
+  <!-- ===== Menu lateral ===== -->
+  <nav class="menu-lateral" aria-label="Menu principal">
+    <div class="menu-grupo">
+      <a class="menu-item" href="index.html"><i class="ri-home-5-line"></i><span>Biblioteca da conta</span></a>
+      <a class="menu-item" href="explorar.html"><i class="ri-compass-3-line"></i><span>Explorar</span></a>
+      <a class="menu-item" href="radio.html"><i class="ri-radio-line"></i><span>Rádio</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minha Biblioteca</h3>
+      <a class="menu-item" href="curtidas.html"><i class="ri-heart-line"></i><span>Músicas Curtidas</span></a>
+      <a class="menu-item" href="downloads.html" aria-current="page"><i class="ri-download-line"></i><span>Downloads</span></a>
+      <a class="menu-item" href="recentes.html"><i class="ri-history-line"></i><span>Tocadas Recentemente</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minhas Playlists <a class="botao-icone" href="playlist.html" aria-label="Ver playlists"><i class="ri-play-list-line"></i></a></h3>
+      <div data-spotify-playlists></div>
+    </div>
+  </nav>
+
+  <!-- ===== Conteúdo ===== -->
+  <main class="conteudo">
+
+      <div class="cabecalho-pagina">
+        <div><h1 class="titulo-pagina">Downloads</h1><p class="subtitulo-pagina">Guarde e toque músicas do seu computador ou celular neste navegador.</p></div>
+      </div>
+      <section class="secao" data-device-library>
+        <label for="arquivos-audio"><strong>Importar músicas do dispositivo</strong></label>
+        <input id="arquivos-audio" type="file" multiple accept="audio/*,.mp3,.m4a,.aac,.wav,.flac,.ogg,.opus,.weba,.aif,.aiff">
+        <p class="subtitulo-pagina">Os arquivos ficam neste aparelho. Limpar os dados do site apaga as cópias importadas.</p>
+        <p role="status"></p>
+        <h2>Músicas neste dispositivo</h2>
+        <ul class="arquivos-locais"></ul>
+      </section>
+  </main>
+
+  <!-- ===== Player ===== -->
+  <footer class="player">
+    <div class="player-musica">
+      <img src="img/tocando-agora.svg" alt="Capa da música atual">
+      <div>
+        <h4>Nenhuma música selecionada</h4>
+        <p>Conecte o Spotify para começar</p>
+      </div>
+      <button type="button" class="curtir botao-icone" data-current-favorite aria-label="Salvar música atual" disabled><i class="ri-heart-line"></i><i class="ri-heart-fill"></i></button>
+    </div>
+    <div class="player-centro">
+      <div class="player-botoes">
+        <label class="botao-icone" title="Aleatório"><input class="estado" type="checkbox"><i class="ri-shuffle-line"></i></label>
+        <a class="botao-icone" href="#" aria-label="Anterior"><i class="ri-skip-back-line"></i></a>
+        <button type="button" class="botao-tocar" aria-label="Tocar ou pausar"><i class="ri-pause-line"></i><i class="ri-play-fill"></i></button>
+        <a class="botao-icone" href="#" aria-label="Próxima"><i class="ri-skip-forward-line"></i></a>
+        <label class="botao-icone" title="Repetir"><input class="estado" type="checkbox"><i class="ri-repeat-line"></i></label>
+      </div>
+      <div class="player-progresso">
+        <span>0:00</span>
+        <div class="barra-progresso"><span></span></div>
+        <span>0:00</span>
+      </div>
+    </div>
+    <div class="player-direita">
+      <a class="botao-icone extra" href="playlist.html" aria-label="Playlists"><i class="ri-play-list-line"></i></a>
+      <button type="button" class="botao-icone extra" data-fullscreen aria-label="Tela cheia"><i class="ri-fullscreen-line"></i></button>
+      <div class="volume" title="Volume: 75%"><i class="ri-volume-up-line"></i><div class="volume-barra"><span></span></div></div>
+    </div>
+  </footer>
+
+</body>
+</html>

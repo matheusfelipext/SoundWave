@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101323">
+  <title>Conectando ao Spotify · SoundWave</title>
+  <link rel="stylesheet" href="css/icones/icones.css">
+  <link rel="stylesheet" href="css/estilo.css">
+  <style>
+    body { display: grid; min-height: 100vh; place-items: center; padding: 24px; background: var(--fundo-pagina); color: var(--texto); }
+    .callback-card { width: min(520px, 100%); padding: 32px; border: 1px solid var(--borda); border-radius: 20px; background: var(--fundo-cartao); text-align: center; }
+    .callback-card h1 { margin: 0 0 12px; }
+    .callback-card p { color: var(--texto-secundario); line-height: 1.6; }
+    .callback-card a { color: var(--cor-principal); }
+  </style>
+  <script defer src="js/spotify/inicio.js"></script>
+  <script defer src="js/spotify/auth.js"></script>
+  <script defer src="js/spotify/callback.js"></script>
+</head>
+<body>
+  <input type="checkbox" id="tema-escuro" hidden>
+  <main class="callback-card">
+    <p class="destaque-tipo">SOUNDWAVE</p>
+    <h1>Conectando ao Spotify</h1>
+    <p data-callback-message role="status" aria-live="polite">Aguarde enquanto validamos sua autorização…</p>
+    <a data-callback-retry href="index.html">Voltar à minha conta Spotify</a>
+  </main>
+
+</body>
+</html>

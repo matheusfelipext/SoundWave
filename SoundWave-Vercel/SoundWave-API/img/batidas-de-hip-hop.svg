@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><g transform="translate(0 0) rotate(270 50 50)">
+        <rect width="100" height="100" fill="hsl(280 72% 56%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(110 55% 42%)"/></g><g transform="translate(100 0) rotate(90 50 50)">
+        <rect width="100" height="100" fill="hsl(315 80% 72%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(295 85% 90%)"/></g><g transform="translate(200 0) rotate(90 50 50)">
+        <rect width="100" height="100" fill="hsl(280 72% 56%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(295 85% 90%)"/></g><g transform="translate(0 100) rotate(0 50 50)">
+        <rect width="100" height="100" fill="hsl(110 55% 42%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(280 72% 56%)"/></g><g transform="translate(100 100) rotate(0 50 50)">
+        <rect width="100" height="100" fill="hsl(295 85% 90%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(280 45% 16%)"/></g><g transform="translate(200 100) rotate(270 50 50)">
+        <rect width="100" height="100" fill="hsl(295 85% 90%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(280 45% 16%)"/></g><g transform="translate(0 200) rotate(0 50 50)">
+        <rect width="100" height="100" fill="hsl(280 72% 56%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(110 55% 42%)"/></g><g transform="translate(100 200) rotate(0 50 50)">
+        <rect width="100" height="100" fill="hsl(315 80% 72%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(295 85% 90%)"/></g><g transform="translate(200 200) rotate(0 50 50)">
+        <rect width="100" height="100" fill="hsl(280 72% 56%)"/><path d="M0 0 H100 A100 100 0 0 1 0 100Z" fill="hsl(110 55% 42%)"/></g></svg>

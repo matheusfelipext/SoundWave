@@ -1,0 +1,66 @@
+/* =====================================================================
+   Responsividade — o site se adapta a quatro tamanhos de tela:
+   > 1280px   computador grande: layout completo
+   <= 1280px  notebook: grades com menos colunas
+   <= 1024px  tablet: menu lateral vira gaveta (botão ☰), player sem a parte da direita
+   <= 768px   celular: busca vira ícone, grades com 2 colunas, player compacto
+   ===================================================================== */
+@media (max-width: 1280px) {
+  .grade-6 { grid-template-columns: repeat(4, 1fr); }
+  .grade-5 { grid-template-columns: repeat(4, 1fr); }
+  .player-direita .botao-icone.extra { display: none; }
+}
+
+@media (max-width: 1024px) {
+  /* menu lateral vira gaveta, aberta pelo checkbox #menu-aberto */
+  .menu-lateral { transform: translateX(-100%); box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2); }
+  html:has(#menu-aberto:checked) .menu-lateral { transform: translateX(0); }
+  .menu-fundo { display: block; position: fixed; inset: 0; z-index: 30; background: rgba(0, 0, 0, 0.5); opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  html:has(#menu-aberto:checked) .menu-fundo { opacity: 1; pointer-events: auto; }
+  .botao-menu { display: inline-flex; }
+  .conteudo { margin-left: 0; padding-left: 24px; padding-right: 24px; }
+  .barra-esquerda { gap: 16px; }
+  .grade-4 { grid-template-columns: repeat(3, 1fr); }
+  .grade-3 { grid-template-columns: repeat(2, 1fr); }
+  .player-direita { display: none; }
+  .player-centro { max-width: none; }
+}
+
+@media (max-width: 768px) {
+  :root { --altura-barra: 60px; --altura-player: 72px; }
+  .busca, .perfil-nome, .barra-direita .notificacoes { display: none; }
+  .so-celular { display: inline-flex; }
+  .barra-superior { padding: 0 16px; }
+  .conteudo { padding-left: 16px; padding-right: 16px; }
+  .destaque { height: 260px; padding: 0 24px 24px; align-items: flex-end; }
+  .destaque h1 { font-size: 30px; margin-bottom: 10px; }
+  .destaque p { font-size: 16px; margin-bottom: 16px; }
+  .secao h2 { font-size: 20px; }
+  .grade { gap: 12px; }
+  .grade-6, .grade-5, .grade-4 { grid-template-columns: repeat(2, 1fr); }
+  .grade-3 { grid-template-columns: 1fr; }
+  .grade-artistas { grid-template-columns: repeat(3, 1fr); }
+  .musica { grid-template-columns: 28px 1fr auto auto; }
+  .musica-album { display: none; }
+  .medidor { width: 100%; }
+  .medidor-barra { width: 100%; }
+  /* player compacto */
+  .player { gap: 12px; padding: 0 16px; }
+  .player-musica img { width: 44px; height: 44px; }
+  .player-centro { flex: none; }
+  .player-botoes { margin: 0; gap: 4px; }
+  .player-botoes .botao-icone { display: none; }
+  .player-progresso { display: none; }
+  .botao-tocar { width: 44px; height: 44px; }
+  .player-musica .curtir { display: none; }
+}
+
+@media (max-width: 520px) {
+  .barra-superior:has(.barra-esquerda) { gap: 6px; padding-inline: 8px; }
+  .barra-esquerda, .barra-esquerda + .barra-direita { gap: 6px; }
+  .barra-esquerda .logo-nome {
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%);
+  }
+  .barra-esquerda .botao-menu, .barra-esquerda + .barra-direita .so-celular { width: 28px; padding-inline: 0; }
+  .barra-esquerda + .barra-direita .perfil img { width: 28px; height: 28px; }
+}

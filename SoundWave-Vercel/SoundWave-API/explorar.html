@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorar · SoundWave</title>
+
+  <!-- Fonte do logo (precisa de internet; sem ela, usa uma fonte cursiva do sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+
+  <!-- Ícones (Remix Icon, salvos na pasta css/icones) e estilo do site -->
+  <link rel="stylesheet" href="css/icones/icones.css">
+  <!-- estilo.css só importa os outros arquivos da pasta css, na ordem certa -->
+  <link rel="stylesheet" href="css/estilo.css">
+  <script defer src="js/spotify/inicio.js"></script>
+  <script defer src="js/spotify/auth.js"></script>
+  <script defer src="js/spotify/api.js"></script>
+  <script defer src="js/spotify/library.js"></script>
+  <script defer src="js/spotify/search.js"></script>
+  <script defer src="js/spotify/player.js"></script>
+  <script defer src="js/spotify/navigation.js"></script>
+  <script defer src="js/spotify/device-music.js"></script>
+  <script defer src="js/spotify/public-playlists.js"></script>
+  <script defer src="js/spotify/app.js"></script>
+</head>
+<body>
+
+  <!-- Estados controlados só por CSS: tema, menu no celular e play/pause -->
+  <input class="estado" type="checkbox" id="tema-escuro" aria-label="Tema escuro">
+  <input class="estado" type="checkbox" id="menu-aberto">
+<!-- ===== Barra superior ===== -->
+  <header class="barra-superior">
+    <div class="barra-esquerda">
+      <label class="botao-icone botao-menu" for="menu-aberto" aria-label="Abrir menu"><i class="ri-menu-line"></i></label>
+      <a class="logo" href="index.html">
+        <span class="logo-icone"><i class="ri-music-2-line"></i></span>
+        <span class="logo-nome">SoundWave</span>
+      </a>
+      <form class="busca" action="explorar.html" method="get" role="search">
+        <i class="ri-search-line"></i>
+        <input type="search" name="q" placeholder="Buscar músicas, artistas ou álbuns..." aria-label="Buscar">
+        <button type="submit">Buscar</button>
+      </form>
+    </div>
+    <div class="barra-direita">
+      <a class="botao-icone so-celular" href="explorar.html" aria-label="Buscar"><i class="ri-search-line"></i></a>
+      <a class="botao-icone notificacoes" href="recentes.html" aria-label="Notificações"><i class="ri-notification-line"></i></a>
+      <label class="interruptor" for="tema-escuro" title="Alternar tema escuro"></label>
+      <a class="perfil" href="curtidas.html">
+        <img src="img/avatar.svg" alt="Foto de perfil">
+        <span class="perfil-nome">Conecte o Spotify <i class="ri-arrow-down-s-line"></i></span>
+      </a>
+    </div>
+  </header>
+
+  <!-- Fundo escuro que fecha o menu no celular -->
+  <label class="menu-fundo" for="menu-aberto" aria-label="Fechar menu"></label>
+
+  <!-- ===== Menu lateral ===== -->
+  <nav class="menu-lateral" aria-label="Menu principal">
+    <div class="menu-grupo">
+      <a class="menu-item" href="index.html"><i class="ri-home-5-line"></i><span>Biblioteca da conta</span></a>
+      <a class="menu-item" href="explorar.html" aria-current="page"><i class="ri-compass-3-line"></i><span>Explorar</span></a>
+      <a class="menu-item" href="radio.html"><i class="ri-radio-line"></i><span>Rádio</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minha Biblioteca</h3>
+      <a class="menu-item" href="curtidas.html"><i class="ri-heart-line"></i><span>Músicas Curtidas</span></a>
+      <a class="menu-item" href="downloads.html"><i class="ri-download-line"></i><span>Downloads</span></a>
+      <a class="menu-item" href="recentes.html"><i class="ri-history-line"></i><span>Tocadas Recentemente</span></a>
+    </div>
+    <div class="menu-grupo">
+      <h3 class="menu-titulo">Minhas Playlists <a class="botao-icone" href="playlist.html" aria-label="Ver playlists"><i class="ri-play-list-line"></i></a></h3>
+      <div data-spotify-playlists></div>
+    </div>
+  </nav>
+
+  <!-- ===== Conteúdo ===== -->
+  <main class="conteudo">
+
+      <div class="cabecalho-pagina">
+        <div><h1 class="titulo-pagina">Explorar</h1><p class="subtitulo-pagina">Encontre músicas, artistas e álbuns no Spotify.</p></div>
+        <form class="busca busca-mobile" action="explorar.html" method="get" role="search">
+          <label><input type="search" name="q" placeholder="Buscar no Spotify" aria-label="Buscar no Spotify" required></label>
+          <button type="submit">Buscar</button>
+        </form>
+      </div>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Estilos musicais</h2>
+          
+        </div>
+        <div class="grade grade-5" data-spotify-genres>
+        <a class="genero gradiente-rosa" href="explorar.html?genre=pop" data-genre="pop">Pop</a>
+<a class="genero gradiente-vermelho" href="explorar.html?genre=rock" data-genre="rock">Rock</a>
+<a class="genero gradiente-lima" href="explorar.html?genre=mpb" data-genre="mpb">MPB</a>
+<a class="genero gradiente-roxo" href="explorar.html?genre=electronic" data-genre="electronic">Eletrônica</a>
+<a class="genero gradiente-cinza" href="explorar.html?genre=hip-hop" data-genre="hip-hop">Hip-Hop</a>
+<a class="genero gradiente-amarelo" href="explorar.html?genre=jazz" data-genre="jazz">Jazz</a>
+<a class="genero gradiente-laranja" href="explorar.html?genre=sertanejo" data-genre="sertanejo">Sertanejo</a>
+<a class="genero gradiente-fucsia" href="explorar.html?genre=funk" data-genre="funk">Funk</a>
+<a class="genero gradiente-azul" href="explorar.html?genre=indie" data-genre="indie">Indie</a>
+<a class="genero gradiente-teal" href="explorar.html?genre=forro" data-genre="forro">Forró</a>
+          <a class="genero gradiente-rosa" href="explorar.html?genre=pagode" data-genre="pagode">Pagode</a>
+          <a class="genero gradiente-lima" href="explorar.html?genre=samba" data-genre="samba">Samba</a>
+          <a class="genero gradiente-fucsia" href="explorar.html?genre=funk%20carioca" data-genre="funk carioca">Funk brasileiro</a>
+          <a class="genero gradiente-roxo" href="explorar.html?genre=trap" data-genre="trap">Trap</a>
+          <a class="genero gradiente-teal" href="explorar.html?genre=reggae" data-genre="reggae">Reggae</a>
+          <a class="genero gradiente-cinza" href="explorar.html?genre=metal" data-genre="metal">Metal</a>
+          <a class="genero gradiente-azul" href="explorar.html?genre=blues" data-genre="blues">Blues</a>
+          <a class="genero gradiente-laranja" href="explorar.html?genre=gospel" data-genre="gospel">Gospel</a>
+        </div>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Faixas encontradas</h2>
+          
+        </div>
+        <div class="grade catalogo-compacto" data-spotify-search-tracks></div>
+        <button type="button" class="spotify-load-more" data-spotify-search-more hidden>Carregar mais resultados</button>
+      </section>
+      <section class="secao">
+        <div class="secao-cabecalho">
+          <h2>Artistas encontrados</h2>
+          
+        </div>
+        <div class="grade grade-6 grade-artistas" data-spotify-search-artists></div>
+      </section>
+
+      <section class="secao">
+        <div class="secao-cabecalho"><h2>Álbuns</h2></div>
+        <div class="grade catalogo-compacto" data-spotify-search-albums></div>
+      </section>  </main>
+
+  <!-- ===== Player ===== -->
+  <footer class="player">
+    <div class="player-musica">
+      <img src="img/tocando-agora.svg" alt="Capa da música atual">
+      <div>
+        <h4>Nenhuma música selecionada</h4>
+        <p>Conecte o Spotify para começar</p>
+      </div>
+      <button type="button" class="curtir botao-icone" data-current-favorite aria-label="Salvar música atual" disabled><i class="ri-heart-line"></i><i class="ri-heart-fill"></i></button>
+    </div>
+    <div class="player-centro">
+      <div class="player-botoes">
+        <label class="botao-icone" title="Aleatório"><input class="estado" type="checkbox"><i class="ri-shuffle-line"></i></label>
+        <a class="botao-icone" href="#" aria-label="Anterior"><i class="ri-skip-back-line"></i></a>
+        <button type="button" class="botao-tocar" aria-label="Tocar ou pausar"><i class="ri-pause-line"></i><i class="ri-play-fill"></i></button>
+        <a class="botao-icone" href="#" aria-label="Próxima"><i class="ri-skip-forward-line"></i></a>
+        <label class="botao-icone" title="Repetir"><input class="estado" type="checkbox"><i class="ri-repeat-line"></i></label>
+      </div>
+      <div class="player-progresso">
+        <span>0:00</span>
+        <div class="barra-progresso"><span></span></div>
+        <span>0:00</span>
+      </div>
+    </div>
+    <div class="player-direita">
+      <a class="botao-icone extra" href="playlist.html" aria-label="Playlists"><i class="ri-play-list-line"></i></a>
+      <button type="button" class="botao-icone extra" data-fullscreen aria-label="Tela cheia"><i class="ri-fullscreen-line"></i></button>
+      <div class="volume" title="Volume: 75%"><i class="ri-volume-up-line"></i><div class="volume-barra"><span></span></div></div>
+    </div>
+  </footer>
+
+</body>
+</html>

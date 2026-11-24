@@ -1,0 +1,15 @@
+/* 9. Tema escuro (checkbox #tema-escuro marcado) ----------------------- */
+html:has(#tema-escuro:checked) {
+  --fundo-pagina: #030712;
+  --fundo-cartao: #111827;
+  --fundo-suave: #1f2937;
+  --fundo-hover: #374151;
+  --borda: #1f2937;
+  --texto: #f3f4f6;
+  --texto-secundario: #9ca3af;
+  --texto-claro: #6b7280;
+  --sombra: 0 10px 25px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
+}
+html:has(#tema-escuro:checked) .menu-item[aria-current="page"] { background: rgba(129, 140, 248, 0.18); color: #a5b4fc; }
+html:has(#tema-escuro:checked) .musica.tocando { background: rgba(129, 140, 248, 0.12); }

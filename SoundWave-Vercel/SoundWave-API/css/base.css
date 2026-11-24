@@ -1,0 +1,49 @@
+/* 2. Base ------------------------------------------------------------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texto);
+  background: var(--fundo-pagina);
+  transition: background var(--transicao), color var(--transicao);
+}
+
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+h1, h2, h3, h4 { margin: 0; line-height: 1.2; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+:focus-visible { outline: 2px solid var(--cor-principal); outline-offset: 2px; }
+
+/* Checkboxes escondidos que guardam o estado (tema, menu, play, curtir) */
+.estado { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+label { cursor: pointer; }
+
+/* Botão redondo só com ícone (usado em toda a interface) */
+.botao-icone {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--texto-secundario);
+  font-size: 20px;
+  transition: background var(--transicao), color var(--transicao);
+}
+.botao-icone:hover { background: var(--fundo-suave); color: var(--texto); }
+
+/* Botão principal (roxo) */
+.botao-principal {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 999px;
+  background: var(--cor-principal);
+  color: #fff;
+  font-weight: 600;
+  transition: background var(--transicao), transform var(--transicao);
+}
+.botao-principal:hover { background: var(--cor-principal-escura); transform: translateY(-1px); }

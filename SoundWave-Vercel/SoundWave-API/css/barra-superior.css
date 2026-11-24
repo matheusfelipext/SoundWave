@@ -1,0 +1,77 @@
+/* 3. Barra superior --------------------------------------------------- */
+.barra-superior {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 50;
+  height: var(--altura-barra);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 24px;
+  background: var(--fundo-cartao);
+  border-bottom: 1px solid var(--borda);
+}
+.barra-esquerda, .barra-direita { display: flex; align-items: center; gap: 16px; min-width: 0; }
+.barra-esquerda { gap: 32px; flex: 1; }
+
+.logo { display: flex; align-items: center; gap: 12px; flex: none; }
+.logo-icone {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  background: var(--cor-principal);
+  color: #fff;
+  display: grid; place-items: center;
+  font-size: 18px;
+}
+.logo-nome { font-family: "Pacifico", "Brush Script MT", cursive; font-size: 20px; color: var(--cor-principal); }
+
+.busca { position: relative; width: 100%; max-width: 420px; }
+.busca i {
+  position: absolute; left: 16px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--texto-claro);
+  font-size: 20px;
+  pointer-events: none;
+}
+.busca input {
+  width: 100%;
+  padding: 11px 16px 11px 48px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: var(--fundo-suave);
+  color: var(--texto);
+  font: inherit;
+  font-size: 14px;
+}
+.busca input:focus { outline: none; border-color: var(--cor-principal); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2); }
+.busca input::placeholder { color: var(--texto-claro); }
+.busca button { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+
+/* Interruptor de tema (controlado pelo checkbox #tema-escuro) */
+.interruptor {
+  width: 44px; height: 24px;
+  border-radius: 12px;
+  background: #d1d5db;
+  position: relative;
+  flex: none;
+  transition: background 0.3s;
+}
+.interruptor::after {
+  content: "";
+  position: absolute; top: 2px; left: 2px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: left 0.3s;
+}
+html:has(#tema-escuro:checked) .interruptor { background: var(--cor-principal); }
+html:has(#tema-escuro:checked) .interruptor::after { left: 22px; }
+
+.perfil { display: flex; align-items: center; gap: 12px; }
+.perfil img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.perfil-nome { display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 500; }
+.perfil-nome i { color: var(--texto-claro); }
+
+.botao-menu, .so-celular { display: none; }

@@ -1,0 +1,25 @@
+/* 1. Variáveis -------------------------------------------------------- */
+:root {
+  --cor-principal: #6366f1;
+  --cor-principal-escura: #4f46e5;
+  --cor-secundaria: #8b5cf6;
+  --cor-rosa: #ec4899;
+
+  --fundo-pagina: #f9fafb;
+  --fundo-cartao: #ffffff;
+  --fundo-suave: #f3f4f6;
+  --fundo-hover: #e5e7eb;
+  --borda: #e5e7eb;
+  --texto: #111827;
+  --texto-secundario: #4b5563;
+  --texto-claro: #9ca3af;
+
+  --altura-barra: 72px;
+  --altura-player: 88px;
+  --largura-menu: 256px;
+
+  --raio: 12px;
+  --raio-grande: 20px;
+  --sombra: 0 10px 25px rgba(0, 0, 0, 0.08);
+  --transicao: 0.2s ease;
+}

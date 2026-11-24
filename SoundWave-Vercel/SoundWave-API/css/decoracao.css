@@ -1,0 +1,218 @@
+/* =====================================================================
+   Decoração — gradientes, vidro fosco e brilhos.
+   Este arquivo só "enfeita": ele refina regras dos arquivos anteriores.
+   Se quiser um visual mais simples, basta tirar a linha dele do estilo.css.
+   ===================================================================== */
+
+/* Gradiente principal da marca (usado em botões, títulos e detalhes) */
+:root {
+  --gradiente-marca: linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
+  --gradiente-marca-suave: linear-gradient(135deg, rgba(99, 102, 241, 0.18), rgba(236, 72, 153, 0.18));
+  --brilho: 0 10px 30px rgba(99, 102, 241, 0.35);
+  --vidro: rgba(255, 255, 255, 0.72);
+}
+
+/* ---- Fundo da página: manchas de cor desfocadas que flutuam devagar ---- */
+body {
+  background: var(--fundo-pagina);
+  position: relative;
+}
+body::before, body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.6;
+  pointer-events: none;
+  animation: flutuar 18s ease-in-out infinite alternate;
+}
+body::before {
+  width: 55vw; height: 55vw;
+  top: -20vw; right: -15vw;
+  background: radial-gradient(circle, #8b5cf6, #ec4899 60%, transparent 70%);
+}
+body::after {
+  width: 45vw; height: 45vw;
+  bottom: -15vw; left: -10vw;
+  background: radial-gradient(circle, #6366f1, #22d3ee 60%, transparent 70%);
+  animation-delay: -9s;
+}
+@keyframes flutuar { to { transform: translate(-6vw, 5vw) scale(1.15); } }
+
+/* ---- Barra superior, menu e player viram "vidro fosco" ---- */
+.barra-superior, .menu-lateral, .player {
+  background: var(--vidro);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+/* linha colorida no topo da barra e do player */
+.barra-superior::after, .player::before {
+  content: "";
+  position: absolute;
+  left: 0; right: 0;
+  height: 3px;
+  background: var(--gradiente-marca);
+}
+.barra-superior::after { bottom: -1px; opacity: 0.6; }
+.player::before { top: -1px; }
+
+/* Logo com texto em gradiente e ícone brilhante */
+.logo-nome {
+  background: var(--gradiente-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.logo-icone { background: var(--gradiente-marca); box-shadow: var(--brilho); }
+
+/* Campo de busca com borda em gradiente quando está em foco */
+.busca input:focus {
+  border-color: transparent;
+  background: linear-gradient(var(--fundo-cartao), var(--fundo-cartao)) padding-box,
+              var(--gradiente-marca) border-box;
+  box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.15);
+}
+
+/* Interruptor de tema com gradiente quando ligado */
+html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca); }
+
+/* Foto de perfil com anel colorido */
+.perfil img { outline: 2px solid transparent; outline-offset: 2px; transition: outline-color var(--transicao); }
+.perfil:hover img { outline-color: var(--cor-secundaria); }
+
+/* ---- Menu lateral: item ativo vira uma pílula em gradiente ---- */
+.menu-item[aria-current="page"] {
+  background: var(--gradiente-marca);
+  color: #fff;
+  box-shadow: var(--brilho);
+}
+.menu-item:not([aria-current="page"]):hover { background: var(--gradiente-marca-suave); }
+.menu-item img { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
+
+/* ---- Destaque: gradiente animado por cima da imagem ---- */
+.destaque { box-shadow: 0 25px 60px rgba(99, 102, 241, 0.25); }
+.destaque::before {
+  background:
+    linear-gradient(90deg, rgba(10, 6, 30, 0.85), rgba(10, 6, 30, 0.35) 55%, transparent),
+    linear-gradient(135deg, rgba(99, 102, 241, 0.55), rgba(139, 92, 246, 0.25), rgba(236, 72, 153, 0.55));
+  background-size: 100% 100%, 300% 300%;
+  animation: ondular 10s ease-in-out infinite alternate;
+}
+@keyframes ondular { to { background-position: 0 0, 100% 100%; } }
+/* anel decorativo no canto direito (fica atrás do texto) */
+.destaque-texto { z-index: 1; }
+.destaque::after {
+  z-index: 0;
+  content: "";
+  position: absolute;
+  right: -80px; top: -80px;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  border: 40px solid rgba(255, 255, 255, 0.12);
+  animation: girar 30s linear infinite;
+}
+@keyframes girar { to { transform: rotate(360deg); } }
+.destaque-tipo { color: #f5d0fe; }
+
+/* ---- Botões em gradiente, com brilho e deslize de cor no hover ---- */
+.botao-principal, .botao-tocar, .estacao-play {
+  background: var(--gradiente-marca);
+  background-size: 200% 200%;
+  box-shadow: var(--brilho);
+  transition: background-position 0.5s ease, transform var(--transicao), box-shadow var(--transicao);
+}
+.botao-principal:hover, .botao-tocar:hover, .estacao-play:hover {
+  background-position: 100% 100%;
+  box-shadow: 0 14px 36px rgba(236, 72, 153, 0.4);
+}
+
+/* ---- Títulos de seção com um traço colorido ---- */
+.secao h2, .titulo-pagina {
+  position: relative;
+  padding-left: 16px;
+}
+.secao h2::before, .titulo-pagina::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 10%;
+  width: 5px; height: 80%;
+  border-radius: 3px;
+  background: var(--gradiente-marca);
+}
+.ver-tudo {
+  background: var(--gradiente-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* ---- Cartões: borda em gradiente e brilho ao passar o mouse ---- */
+.cartao, .acesso-rapido, .estacao, .lista-musicas, .medidor {
+  position: relative;
+  background: var(--vidro);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.cartao::before, .acesso-rapido::before, .estacao::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: var(--gradiente-marca);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity var(--transicao);
+  pointer-events: none;
+}
+.cartao:hover::before, .acesso-rapido:hover::before, .estacao:hover::before { opacity: 1; }
+.cartao:hover, .estacao:hover { box-shadow: 0 18px 40px rgba(139, 92, 246, 0.22); }
+.cartao:hover img { transform: scale(1.03); }
+.cartao img { transition: transform 0.4s ease; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18); }
+
+/* Ícones do acesso rápido com brilho da própria cor */
+.acesso-rapido span:first-child { box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18); }
+.acesso-rapido:hover span:first-child { transform: rotate(-6deg) scale(1.08); transition: transform 0.3s ease; }
+
+/* Artistas: anel em gradiente ao redor da foto no hover */
+.artista img { outline: 3px solid transparent; outline-offset: 4px; transition: transform 0.3s, outline-color 0.3s, box-shadow 0.3s; }
+.artista:hover img { outline-color: var(--cor-secundaria); box-shadow: 0 16px 36px rgba(139, 92, 246, 0.35); }
+
+/* Gêneros: brilho sutil deslizando no hover */
+.genero { position: relative; overflow: hidden; box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15); }
+.genero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%);
+  transform: translateX(-100%);
+  transition: transform 0.7s ease;
+}
+.genero:hover::after { transform: translateX(100%); }
+
+/* ---- Lista: música tocando fica com fundo em gradiente suave ---- */
+.musica.tocando { background: var(--gradiente-marca-suave); }
+.musica.tocando .musica-titulo {
+  background: var(--gradiente-marca);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.equalizador i { background: var(--gradiente-marca); }
+
+/* ---- Player: capa com brilho e barras em gradiente ---- */
+.player-musica img { box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
+.volume-barra span, .volume-barra span::after { background: var(--gradiente-marca); }
+.medidor-barra span { background: var(--gradiente-marca); }
+
+/* ---- Tema escuro: vidro mais escuro e manchas mais fortes ---- */
+html:has(#tema-escuro:checked) {
+  --vidro: rgba(17, 24, 39, 0.72);
+  --brilho: 0 10px 30px rgba(139, 92, 246, 0.45);
+}
+html:has(#tema-escuro:checked) body::before,
+html:has(#tema-escuro:checked) body::after { opacity: 0.35; }
