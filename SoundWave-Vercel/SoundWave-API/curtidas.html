@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Músicas Curtidas · SoundWave</title>
 
-  <!-- Fonte do logo (precisa de internet; sem ela, usa uma fonte cursiva do sistema) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 
-  <!-- Ícones (Remix Icon, salvos na pasta css/icones) e estilo do site -->
   <link rel="stylesheet" href="css/icones/icones.css">
-  <!-- estilo.css só importa os outros arquivos da pasta css, na ordem certa -->
   <link rel="stylesheet" href="css/estilo.css">
   <script defer src="js/spotify/inicio.js"></script>
   <script defer src="js/spotify/auth.js"></script>
@@ -27,10 +24,8 @@
 </head>
 <body>
 
-  <!-- Estados controlados só por CSS: tema, menu no celular e play/pause -->
   <input class="estado" type="checkbox" id="tema-escuro" aria-label="Tema escuro">
   <input class="estado" type="checkbox" id="menu-aberto">
-<!-- ===== Barra superior ===== -->
   <header class="barra-superior">
     <div class="barra-esquerda">
       <label class="botao-icone botao-menu" for="menu-aberto" aria-label="Abrir menu"><i class="ri-menu-line"></i></label>
@@ -55,10 +50,8 @@
     </div>
   </header>
 
-  <!-- Fundo escuro que fecha o menu no celular -->
   <label class="menu-fundo" for="menu-aberto" aria-label="Fechar menu"></label>
 
-  <!-- ===== Menu lateral ===== -->
   <nav class="menu-lateral" aria-label="Menu principal">
     <div class="menu-grupo">
       <a class="menu-item" href="index.html"><i class="ri-home-5-line"></i><span>Biblioteca da conta</span></a>
@@ -77,7 +70,6 @@
     </div>
   </nav>
 
-  <!-- ===== Conteúdo ===== -->
   <main class="conteudo">
 
       <section class="destaque" style="background-image: url('img/minhas-favoritas.svg');">
@@ -93,7 +85,6 @@
 
   </main>
 
-  <!-- ===== Player ===== -->
   <footer class="player">
     <div class="player-musica">
       <img src="img/tocando-agora.svg" alt="Capa da música atual">

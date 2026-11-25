@@ -150,7 +150,6 @@ button.botao-icone { border: 0; background: transparent; cursor: pointer; }
   .catalogo-compacto .cartao { padding: 8px; }
 }
 
-
 .preferencias-cookie { width: 100%; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
 .sw-preferencias { position: fixed; z-index: 80; right: 16px; bottom: calc(var(--altura-player) + 16px); width: min(380px, calc(100vw - 32px)); padding: 18px; border: 1px solid var(--borda); border-radius: 14px; background: var(--fundo-cartao); color: var(--texto); box-shadow: 0 6px 24px #0002; }
 .sw-preferencias h2 { margin: 0 0 6px; font-size: 18px; }

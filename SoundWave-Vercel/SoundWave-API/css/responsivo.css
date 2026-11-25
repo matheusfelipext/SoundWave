@@ -1,10 +1,3 @@
-/* =====================================================================
-   Responsividade — o site se adapta a quatro tamanhos de tela:
-   > 1280px   computador grande: layout completo
-   <= 1280px  notebook: grades com menos colunas
-   <= 1024px  tablet: menu lateral vira gaveta (botão ☰), player sem a parte da direita
-   <= 768px   celular: busca vira ícone, grades com 2 colunas, player compacto
-   ===================================================================== */
 @media (max-width: 1280px) {
   .grade-6 { grid-template-columns: repeat(4, 1fr); }
   .grade-5 { grid-template-columns: repeat(4, 1fr); }

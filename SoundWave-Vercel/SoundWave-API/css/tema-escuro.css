@@ -1,4 +1,3 @@
-/* 9. Tema escuro (checkbox #tema-escuro marcado) ----------------------- */
 html:has(#tema-escuro:checked) {
   --fundo-pagina: #030712;
   --fundo-cartao: #111827;

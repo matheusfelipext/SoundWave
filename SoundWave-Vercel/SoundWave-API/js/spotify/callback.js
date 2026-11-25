@@ -1,14 +1,14 @@
 (() => {
   "use strict";
-  const { completeAuthorization } = SoundWave.auth;
+  const { concluirAutorizacao } = SoundWave.autenticacao;
 
-  const message = document.querySelector("[data-callback-message]");
+  const mensagem = document.querySelector("[data-callback-message]");
 
-  completeAuthorization().then((handled) => {
-    if (!handled && message) message.textContent = "Não encontrei uma resposta de autorização. Volte ao SoundWave e conecte o Spotify novamente.";
-  }).catch((error) => {
-    if (message) message.textContent = error.message || "Não foi possível concluir a conexão com o Spotify.";
-    const retry = document.querySelector("[data-callback-retry]");
-    if (retry) retry.hidden = false;
+  concluirAutorizacao().then((tratado) => {
+    if (!tratado && mensagem) mensagem.textContent = "Não encontrei uma resposta de autorização. Volte ao SoundWave e conecte o Spotify novamente.";
+  }).catch((erro) => {
+    if (mensagem) mensagem.textContent = erro.message || "Não foi possível concluir a conexão com o Spotify.";
+    const tentarNovamente = document.querySelector("[data-callback-retry]");
+    if (tentarNovamente) tentarNovamente.hidden = false;
   });
 })();

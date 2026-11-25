@@ -1,108 +1,108 @@
 SoundWave.api = (() => {
   "use strict";
-  const { getAccessToken, refreshAccessToken } = SoundWave.auth;
+  const { obterTokenAcesso, renovarTokenAcesso } = SoundWave.autenticacao;
 
-  const API_ROOT = "https://api.spotify.com/v1";
+  const RAIZ_API = "https://api.spotify.com/v1";
 
-  class SpotifyApiError extends Error {
-    constructor(message, status, payload = null, detail = "") {
-      super(message);
+  class ErroApiSpotify extends Error {
+    constructor(mensagem, status, carga = null, detalhe = "") {
+      super(mensagem);
       this.name = "SpotifyApiError";
       this.status = status;
-      this.payload = payload;
-      this.detail = detail;
+      this.payload = carga;
+      this.detail = detalhe;
     }
   }
 
-  function messageForStatus(status, detail) {
+  function mensagemPorStatus(status, detalhe) {
     if (status === 401) return "A sessão do Spotify expirou. Conecte-se novamente.";
     if (status === 403) return "O Spotify negou esse recurso. Confira Premium do dono do app, usuário autorizado, permissões e limites do Development Mode.";
     if (status === 404) return "O Spotify não encontrou esse conteúdo ou ele não está disponível para esta conta.";
     if (status === 429) return "O limite de chamadas do Spotify foi atingido. Aguarde um pouco e tente novamente.";
-    return detail || `A API do Spotify respondeu com HTTP ${status}.`;
+    return detalhe || `A API do Spotify respondeu com HTTP ${status}.`;
   }
 
-  async function request(path, { method = "GET", query = null, body = null, cache = "default", retried = false } = {}) {
-    const target = /^https:\/\//i.test(path) ? path : `${API_ROOT}/${String(path).replace(/^\/+/, "")}`;
-    const url = new URL(target);
+  async function requisitar(caminho, { method: metodo = "GET", query: consulta = null, body: corpo = null, cache: cache = "default", retried = false } = {}) {
+    const alvo = /^https:\/\//i.test(caminho) ? caminho : `${RAIZ_API}/${String(caminho).replace(/^\/+/, "")}`;
+    const url = new URL(alvo);
     if (url.origin !== "https://api.spotify.com" || !url.pathname.startsWith("/v1/")) {
       throw new Error("URL de API do Spotify inválida.");
     }
-    if (query) Object.entries(query).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== "") url.searchParams.set(key, String(value));
+    if (consulta) Object.entries(consulta).forEach(([chave, valor]) => {
+      if (valor !== undefined && valor !== null && valor !== "") url.searchParams.set(chave, String(valor));
     });
 
-    const token = await getAccessToken();
-    const response = await fetch(url.href, {
-      method,
-      cache,
+    const token = await obterTokenAcesso();
+    const resposta = await fetch(url.href, {
+      method: metodo,
+      cache: cache,
       headers: {
         Authorization: `Bearer ${token}`,
-        ...(body ? { "Content-Type": "application/json" } : {})
+        ...(corpo ? { "Content-Type": "application/json" } : {})
       },
-      body: body ? JSON.stringify(body) : undefined
+      body: corpo ? JSON.stringify(corpo) : undefined
     });
 
-    if (response.status === 401 && !retried) {
-      await refreshAccessToken();
-      return request(path, { method, query, body, cache, retried: true });
+    if (resposta.status === 401 && !retried) {
+      await renovarTokenAcesso();
+      return requisitar(caminho, { method: metodo, query: consulta, body: corpo, cache: cache, retried: true });
     }
-    if (response.status === 204) return null;
+    if (resposta.status === 204) return null;
 
-    if (!response.ok) {
-      const raw = (await response.text()).trim();
-      let payload = null;
+    if (!resposta.ok) {
+      const bruto = (await resposta.text()).trim();
+      let carga = null;
       try {
-        payload = JSON.parse(raw);
+        carga = JSON.parse(bruto);
       } catch {
         // O Spotify também pode enviar a explicação em texto simples.
       }
-      const reason = payload?.error?.message || payload?.error_description || payload?.error?.reason
-        || (typeof payload === "string" ? payload : null)
-        || (!payload && !raw.startsWith("<") ? raw : "");
-      const detail = typeof reason === "string" ? reason.slice(0, 400) : "";
-      const message = messageForStatus(response.status, detail);
-      const diagnostic = response.status === 403 ? ` (403 em ${url.pathname}${detail ? " · " + detail : ""})` : "";
-      throw new SpotifyApiError(message + diagnostic, response.status, payload, detail);
+      const motivo = carga?.error?.message || carga?.error_description || carga?.error?.reason
+        || (typeof carga === "string" ? carga : null)
+        || (!carga && !bruto.startsWith("<") ? bruto : "");
+      const detalhe = typeof motivo === "string" ? motivo.slice(0, 400) : "";
+      const mensagem = mensagemPorStatus(resposta.status, detalhe);
+      const diagnostico = resposta.status === 403 ? ` (403 em ${url.pathname}${detalhe ? " · " + detalhe : ""})` : "";
+      throw new ErroApiSpotify(mensagem + diagnostico, resposta.status, carga, detalhe);
     }
-    return response.json().catch(() => null);
+    return resposta.json().catch(() => null);
   }
 
-  const search = (query, type = "track,artist,album", offset = 0) => request("/search", {
-    query: { q: query, type, limit: 10, offset }
+  const buscar = (consulta, tipo = "track,artist,album", deslocamento = 0) => requisitar("/search", {
+    query: { q: consulta, type: tipo, limit: 10, offset: deslocamento }
   });
 
-  const getProfile = () => request("/me", { cache: "no-store" });
-  const getSavedTracks = (offset = 0) => request("/me/tracks", { query: { limit: 10, offset } });
-  const getSavedAlbums = (offset = 0) => request("/me/albums", { query: { limit: 10, offset } });
-  const getRecentlyPlayed = () => request("/me/player/recently-played", { query: { limit: 10 } });
-  const getPlaylists = (offset = 0) => request("/me/playlists", { query: { limit: 10, offset } });
-  const getPlaylist = (id) => request(`/playlists/${encodeURIComponent(id)}`);
-  const getPlaylistItems = (id, offset = 0) => request(`/playlists/${encodeURIComponent(id)}/items`, { query: { limit: 10, offset } });
-  const getArtist = (id) => request(`/artists/${encodeURIComponent(id)}`);
-  const getArtistAlbums = (id, offset = 0) => request(`/artists/${encodeURIComponent(id)}/albums`, { query: { include_groups: "album,single", limit: 10, offset } });
+  const obterPerfil = () => requisitar("/me", { cache: "no-store" });
+  const obterMusicasSalvas = (deslocamento = 0) => requisitar("/me/tracks", { query: { limit: 10, offset: deslocamento } });
+  const obterAlbunsSalvos = (deslocamento = 0) => requisitar("/me/albums", { query: { limit: 10, offset: deslocamento } });
+  const obterTocadasRecentemente = () => requisitar("/me/player/recently-played", { query: { limit: 10 } });
+  const obterPlaylists = (deslocamento = 0) => requisitar("/me/playlists", { query: { limit: 10, offset: deslocamento } });
+  const obterPlaylist = (id) => requisitar(`/playlists/${encodeURIComponent(id)}`);
+  const obterItensPlaylist = (id, deslocamento = 0) => requisitar(`/playlists/${encodeURIComponent(id)}/items`, { query: { limit: 10, offset: deslocamento } });
+  const obterArtista = (id) => requisitar(`/artists/${encodeURIComponent(id)}`);
+  const obterAlbunsArtista = (id, deslocamento = 0) => requisitar(`/artists/${encodeURIComponent(id)}/albums`, { query: { include_groups: "album,single", limit: 10, offset: deslocamento } });
 
-  const checkSavedItems = (uris) => request("/me/library/contains", { query: { uris: uris.join(",") } });
-  const saveLibraryItem = (uri) => request("/me/library", { method: "PUT", query: { uris: uri } });
-  const removeLibraryItem = (uri) => request("/me/library", { method: "DELETE", query: { uris: uri } });
+  const verificarItensSalvos = (uris) => requisitar("/me/library/contains", { query: { uris: uris.join(",") } });
+  const salvarNaBiblioteca = (uri) => requisitar("/me/library", { method: "PUT", query: { uris: uri } });
+  const removerDaBiblioteca = (uri) => requisitar("/me/library", { method: "DELETE", query: { uris: uri } });
 
-  const startPlayback = (deviceId, uris) => request("/me/player/play", {
+  const iniciarReproducao = (idDispositivo, uris) => requisitar("/me/player/play", {
     method: "PUT",
-    query: { device_id: deviceId },
-    body: { uris }
+    query: { device_id: idDispositivo },
+    body: { uris: uris }
   });
 
-  const setShuffle = (deviceId, enabled) => request("/me/player/shuffle", {
+  const definirAleatorio = (idDispositivo, habilitado) => requisitar("/me/player/shuffle", {
     method: "PUT",
-    query: { device_id: deviceId, state: enabled }
+    query: { device_id: idDispositivo, state: habilitado }
   });
 
-  const setRepeat = (deviceId, mode) => request("/me/player/repeat", {
+  const definirRepetir = (idDispositivo, modo) => requisitar("/me/player/repeat", {
     method: "PUT",
-    query: { device_id: deviceId, state: mode }
+    query: { device_id: idDispositivo, state: modo }
   });
 
   return {
-    SpotifyApiError, request, search, getProfile, getSavedTracks, getSavedAlbums, getRecentlyPlayed, getPlaylists, getPlaylist, getPlaylistItems, getArtist, getArtistAlbums, checkSavedItems, saveLibraryItem, removeLibraryItem, startPlayback, setShuffle, setRepeat
+    ErroApiSpotify, requisitar, buscar, obterPerfil, obterMusicasSalvas, obterAlbunsSalvos, obterTocadasRecentemente, obterPlaylists, obterPlaylist, obterItensPlaylist, obterArtista, obterAlbunsArtista, verificarItensSalvos, salvarNaBiblioteca, removerDaBiblioteca, iniciarReproducao, definirAleatorio, definirRepetir
   };
 })();

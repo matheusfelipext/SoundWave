@@ -1,36 +1,36 @@
-SoundWave.player = (() => {
+SoundWave.tocador = (() => {
   "use strict";
-  const { startPlayback, setRepeat: setRepeatRequest, setShuffle: setShuffleRequest } = SoundWave.api;
-  const { getAccessToken } = SoundWave.auth;
+  const { iniciarReproducao, definirRepetir: requisicaoDefinirRepetir, definirAleatorio: requisicaoDefinirAleatorio } = SoundWave.api;
+  const { obterTokenAcesso } = SoundWave.autenticacao;
 
-  let sdkPromise;
+  let promessaSdk;
 
-  function loadSdk() {
+  function carregarSdk() {
     if (window.Spotify?.Player) return Promise.resolve();
-    if (sdkPromise) return sdkPromise;
+    if (promessaSdk) return promessaSdk;
 
-    sdkPromise = new Promise((resolve, reject) => {
-      const timeout = window.setTimeout(() => reject(new Error("O Spotify Web Playback SDK não carregou. Confira a conexão com a internet.")), 12000);
+    promessaSdk = new Promise((resolve, reject) => {
+      const tempoLimite = window.setTimeout(() => reject(new Error("O Spotify Web Playback SDK não carregou. Confira a conexão com a internet.")), 12000);
       window.onSpotifyWebPlaybackSDKReady = () => {
-        window.clearTimeout(timeout);
+        window.clearTimeout(tempoLimite);
         resolve();
       };
       const script = document.createElement("script");
       script.src = "https://sdk.scdn.co/spotify-player.js";
       script.async = true;
       script.onerror = () => {
-        window.clearTimeout(timeout);
+        window.clearTimeout(tempoLimite);
         reject(new Error("Não consegui carregar o player oficial do Spotify."));
       };
       document.head.append(script);
     });
-    return sdkPromise.catch((error) => { sdkPromise = null; throw error; });
+    return promessaSdk.catch((erro) => { promessaSdk = null; throw erro; });
   }
 
-  class SpotifyPlayer {
-    constructor({ onState, onMessage }) {
-      this.onState = onState;
-      this.onMessage = onMessage;
+  class TocadorSpotify {
+    constructor({ onState: aoEstado, onMessage: aoMensagem }) {
+      this.onState = aoEstado;
+      this.onMessage = aoMensagem;
       this.instance = null;
       this.deviceId = "";
       this.playbackState = null;
@@ -41,78 +41,78 @@ SoundWave.player = (() => {
     }
 
     preload() {
-      return loadSdk();
+      return carregarSdk();
     }
 
     async connect() {
       if (this.deviceId && this.instance) return this.deviceId;
-      if (!window.Spotify?.Player) await loadSdk();
+      if (!window.Spotify?.Player) await carregarSdk();
       if (!this.instance) {
-        let settled = false;
-        let timeout;
-        let rejectReady;
-        const fail = (message) => {
-          if (settled) { this.onMessage(message, true); return; }
-          settled = true;
-          window.clearTimeout(timeout);
+        let resolvido = false;
+        let tempoLimite;
+        let rejeitarPronto;
+        const falhar = (mensagem) => {
+          if (resolvido) { this.onMessage(mensagem, true); return; }
+          resolvido = true;
+          window.clearTimeout(tempoLimite);
           this.instance?.disconnect();
           this.instance = null;
           this.deviceId = "";
-          rejectReady(new Error(message));
+          rejeitarPronto(new Error(mensagem));
         };
         this.readyPromise = new Promise((resolve, reject) => {
-          rejectReady = reject;
-          timeout = window.setTimeout(() => fail("O Spotify Player não ficou pronto. Confira se sua conta tem Premium e tente novamente."), 15000);
+          rejeitarPronto = reject;
+          tempoLimite = window.setTimeout(() => falhar("O Spotify Player não ficou pronto. Confira se sua conta tem Premium e tente novamente."), 15000);
           this.instance = new window.Spotify.Player({
             name: "SoundWave",
             volume: 0.75,
-            getOAuthToken: (callback) => getAccessToken().then(callback).catch((error) => this.onMessage(error.message, true))
+            getOAuthToken: (retorno) => obterTokenAcesso().then(retorno).catch((erro) => this.onMessage(erro.message, true))
           });
-          const player = this.instance;
-          player.activateElement?.().catch(() => {});
-          player.addListener("autoplay_failed", () => this.onMessage("O navegador aguardou sua interação. Clique em tocar para liberar o áudio.", true));
-          player.addListener("ready", ({ device_id }) => {
-            settled = true;
-            window.clearTimeout(timeout);
+          const tocador = this.instance;
+          tocador.activateElement?.().catch(() => {});
+          tocador.addListener("autoplay_failed", () => this.onMessage("O navegador aguardou sua interação. Clique em tocar para liberar o áudio.", true));
+          tocador.addListener("ready", ({ device_id }) => {
+            resolvido = true;
+            window.clearTimeout(tempoLimite);
             this.deviceId = device_id;
             this.onMessage("Player Spotify conectado neste navegador.");
             resolve(device_id);
           });
-          player.addListener("not_ready", () => {
+          tocador.addListener("not_ready", () => {
             this.deviceId = "";
             this.readyPromise = null;
             this.instance?.disconnect();
             this.instance = null;
             this.onMessage("O player Spotify ficou indisponível. Tente conectar novamente.", true);
           });
-          player.addListener("player_state_changed", (state) => {
-            this.playbackState = state;
-            if (state) this.onState(state);
+          tocador.addListener("player_state_changed", (estado) => {
+            this.playbackState = estado;
+            if (estado) this.onState(estado);
           });
-          player.addListener("initialization_error", ({ message }) => fail(`Falha ao iniciar o player: ${message}`));
-          player.addListener("authentication_error", ({ message }) => fail(`Falha de autenticação do player: ${message}. Conecte novamente.`));
-          player.addListener("account_error", () => fail("O Spotify Web Playback SDK exige uma conta Spotify Premium ativa."));
-          player.addListener("playback_error", ({ message }) => this.onMessage(`O Spotify não iniciou esta reprodução: ${message}`, true));
+          tocador.addListener("initialization_error", ({ message: mensagem }) => falhar(`Falha ao iniciar o player: ${mensagem}`));
+          tocador.addListener("authentication_error", ({ message: mensagem }) => falhar(`Falha de autenticação do player: ${mensagem}. Conecte novamente.`));
+          tocador.addListener("account_error", () => falhar("O Spotify Web Playback SDK exige uma conta Spotify Premium ativa."));
+          tocador.addListener("playback_error", ({ message: mensagem }) => this.onMessage(`O Spotify não iniciou esta reprodução: ${mensagem}`, true));
         });
-        this.instance.connect().then((connected) => {
-          if (!connected) fail("O Spotify Player não conseguiu conectar.");
-        }).catch((error) => fail(error.message));
+        this.instance.connect().then((conectado) => {
+          if (!conectado) falhar("O Spotify Player não conseguiu conectar.");
+        }).catch((erro) => falhar(erro.message));
       }
       return this.deviceId || this.readyPromise;
     }
 
-    async play(track, queue = []) {
-      if (!track?.uri) throw new Error("Esta faixa não tem um Spotify URI reproduzível.");
-      if (track.is_playable === false) throw new Error("O Spotify não disponibiliza esta faixa para sua conta.");
+    async play(musica, fila = []) {
+      if (!musica?.uri) throw new Error("Esta faixa não tem um Spotify URI reproduzível.");
+      if (musica.is_playable === false) throw new Error("O Spotify não disponibiliza esta faixa para sua conta.");
       this.instance?.activateElement?.().catch(() => {});
-      const uniqueQueue = [...new Map([...(queue.length ? queue : [track]), track]
+      const filaUnica = [...new Map([...(fila.length ? fila : [musica]), musica]
         .filter((item) => item?.uri && item.is_playable !== false)
         .map((item) => [item.uri, item])).values()];
-      this.queue = uniqueQueue;
-      const deviceId = await this.connect();
-      const first = uniqueQueue.findIndex((item) => item.uri === track.uri);
-      const ordered = uniqueQueue.slice(first).concat(uniqueQueue.slice(0, first));
-      await startPlayback(deviceId, ordered.map((item) => item.uri));
+      this.queue = filaUnica;
+      const idDispositivo = await this.connect();
+      const primeiro = filaUnica.findIndex((item) => item.uri === musica.uri);
+      const ordenado = filaUnica.slice(primeiro).concat(filaUnica.slice(0, primeiro));
+      await iniciarReproducao(idDispositivo, ordenado.map((item) => item.uri));
     }
 
     async toggle() {
@@ -131,9 +131,9 @@ SoundWave.player = (() => {
       await this.instance.previousTrack();
     }
 
-    async seek(positionMs) {
+    async seek(posicaoMs) {
       if (!this.instance) return;
-      await this.instance.seek(Math.max(0, Number(positionMs) || 0));
+      await this.instance.seek(Math.max(0, Number(posicaoMs) || 0));
     }
 
     async setVolume(volume) {
@@ -143,17 +143,17 @@ SoundWave.player = (() => {
 
     async toggleShuffle() {
       if (!this.deviceId) throw new Error("Conecte o player Spotify antes de alterar o aleatório.");
-      const enabled = !this.shuffle;
-      await setShuffleRequest(this.deviceId, enabled);
-      this.shuffle = enabled;
+      const habilitado = !this.shuffle;
+      await requisicaoDefinirAleatorio(this.deviceId, habilitado);
+      this.shuffle = habilitado;
       return this.shuffle;
     }
 
     async cycleRepeat() {
       if (!this.deviceId) throw new Error("Conecte o player Spotify antes de alterar a repetição.");
-      const mode = this.repeat === "off" ? "context" : this.repeat === "context" ? "track" : "off";
-      await setRepeatRequest(this.deviceId, mode);
-      this.repeat = mode;
+      const modo = this.repeat === "off" ? "context" : this.repeat === "context" ? "track" : "off";
+      await requisicaoDefinirRepetir(this.deviceId, modo);
+      this.repeat = modo;
       return this.repeat;
     }
 
@@ -166,6 +166,6 @@ SoundWave.player = (() => {
   }
 
   return {
-    SpotifyPlayer
+    TocadorSpotify
   };
 })();

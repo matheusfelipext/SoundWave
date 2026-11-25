@@ -1,26 +1,26 @@
-SoundWave.search = (() => {
+SoundWave.busca = (() => {
   "use strict";
-  const { search } = SoundWave.api;
+  const { buscar } = SoundWave.api;
 
-  async function searchCatalog(query, offset = 0) {
-    const value = String(query || "").trim();
-    if (!value) return { tracks: [], artists: [], albums: [] };
-    return search(value, "track,artist,album", offset);
+  async function buscarCatalogo(consulta, deslocamento = 0) {
+    const valor = String(consulta || "").trim();
+    if (!valor) return { tracks: [], artists: [], albums: [] };
+    return buscar(valor, "track,artist,album", deslocamento);
   }
 
-  async function searchGenre(genre, offset = 0) {
-    const value = String(genre || "").trim();
-    if (!value) return { tracks: [], artists: [], albums: [] };
-    const filter = /\s/.test(value) ? '"' + value.replace(/"/g, "") + '"' : value;
-    return search(`genre:${filter}`, "track,artist", offset);
+  async function buscarGenero(genero, deslocamento = 0) {
+    const valor = String(genero || "").trim();
+    if (!valor) return { tracks: [], artists: [], albums: [] };
+    const filtro = /\s/.test(valor) ? '"' + valor.replace(/"/g, "") + '"' : valor;
+    return buscar(`genre:${filtro}`, "track,artist", deslocamento);
   }
 
-  async function searchArtistTracks(name, artistId) {
-    const response = await search(`artist:${name}`, "track");
-    return (response?.tracks?.items || []).filter((track) => track.artists?.some((artist) => artist.id === artistId));
+  async function buscarMusicasArtista(nome, idArtista) {
+    const resposta = await buscar(`artist:${nome}`, "track");
+    return (resposta?.tracks?.items || []).filter((musica) => musica.artists?.some((artista) => artista.id === idArtista));
   }
 
   return {
-    searchCatalog, searchGenre, searchArtistTracks
+    buscarCatalogo, buscarGenero, buscarMusicasArtista
   };
 })();

@@ -1,9 +1,3 @@
-/* =====================================================================
-   SoundWave — arquivo principal de estilo.
-   Ele só reúne os outros arquivos, na ordem certa.
-   A ordem importa: "responsivo" e "tema-escuro" vêm por último porque
-   sobrescrevem regras dos arquivos anteriores.
-   ===================================================================== */
 @import url("variaveis.css");
 @import url("base.css");
 @import url("barra-superior.css");

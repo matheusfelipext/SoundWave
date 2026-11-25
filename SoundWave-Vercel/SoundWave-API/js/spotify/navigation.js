@@ -1,87 +1,87 @@
-SoundWave.navigation = (() => {
+SoundWave.navegacao = (() => {
   "use strict";
-  const names = ["index", "explorar", "artista", "curtidas", "playlist", "recentes", "downloads", "radio"];
-  const pages = new Set(names.map(name => name + ".html"));
-  const directory = new URL("./", location.href);
-  const localTemplates = location.protocol === "file:" && document.querySelector("template[data-page]");
+  const nomes = ["index", "explorar", "artista", "curtidas", "playlist", "recentes", "downloads", "radio"];
+  const paginas = new Set(nomes.map(nome => nome + ".html"));
+  const diretorio = new URL("./", location.href);
+  const modelosLocais = location.protocol === "file:" && document.querySelector("template[data-page]");
 
-  function pageAddress() {
-    if (localTemplates) {
-      const route = new URLSearchParams(location.hash.slice(1)).get("tela");
-      if (route && pages.has(route.split("?")[0])) return new URL(route, directory);
+  function enderecoPagina() {
+    if (modelosLocais) {
+      const rota = new URLSearchParams(location.hash.slice(1)).get("tela");
+      if (rota && paginas.has(rota.split("?")[0])) return new URL(rota, diretorio);
     }
     return new URL(location.href);
   }
 
-  function localPage(name) {
-    const template = document.querySelector('template[data-page="' + name + '"]');
+  function paginaLocal(nome) {
+    const modelo = document.querySelector('template[data-page="' + nome + '"]');
     return {
-      content: template.content.firstElementChild.cloneNode(true),
-      title: template.dataset.title,
-      active: template.dataset.active
+      content: modelo.content.firstElementChild.cloneNode(true),
+      title: modelo.dataset.title,
+      active: modelo.dataset.active
     };
   }
 
-  async function webPage(url) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error("Página indisponível");
-    const page = new DOMParser().parseFromString(await response.text(), "text/html");
+  async function paginaWeb(url) {
+    const resposta = await fetch(url);
+    if (!resposta.ok) throw new Error("Página indisponível");
+    const pagina = new DOMParser().parseFromString(await resposta.text(), "text/html");
     return {
-      content: page.querySelector("main.conteudo"),
-      title: page.title,
-      active: page.querySelector(".menu-lateral [aria-current]")?.getAttribute("href")
+      content: pagina.querySelector("main.conteudo"),
+      title: pagina.title,
+      active: pagina.querySelector(".menu-lateral [aria-current]")?.getAttribute("href")
     };
   }
 
-  function showPage(page) {
-    document.querySelector("main.conteudo").replaceWith(page.content);
-    document.title = page.title;
+  function mostrarPagina(pagina) {
+    document.querySelector("main.conteudo").replaceWith(pagina.content);
+    document.title = pagina.title;
     document.querySelector("#menu-aberto").checked = false;
     for (const link of document.querySelectorAll(".menu-lateral a.menu-item")) {
-      if (link.getAttribute("href") === page.active) link.setAttribute("aria-current", "page");
+      if (link.getAttribute("href") === pagina.active) link.setAttribute("aria-current", "page");
       else link.removeAttribute("aria-current");
     }
     window.scrollTo(0, 0);
   }
 
-  function keepPlayerOnNavigation(renderPage) {
-    if (location.protocol === "file:" && !localTemplates) return;
-    if (localTemplates && location.hash.startsWith("#tela=")) {
-      showPage(localPage(pageAddress().pathname.split("/").pop()));
+  function manterPlayerNaNavegacao(desenharPagina) {
+    if (location.protocol === "file:" && !modelosLocais) return;
+    if (modelosLocais && location.hash.startsWith("#tela=")) {
+      mostrarPagina(paginaLocal(enderecoPagina().pathname.split("/").pop()));
     }
-    let pending = Promise.resolve();
-    function navigate(url, push) {
-      pending = pending.then(async () => {
-        const name = url.pathname.split("/").pop();
-        const page = localTemplates ? localPage(name) : await webPage(url);
-        if (!page.content) throw new Error("Página indisponível");
-        if (push) {
-          const address = localTemplates ? "#" + new URLSearchParams({ tela: name + url.search }) : url;
-          history.pushState(null, "", address);
+    let pendente = Promise.resolve();
+    function navegar(url, empurrar) {
+      pendente = pendente.then(async () => {
+        const nome = url.pathname.split("/").pop();
+        const pagina = modelosLocais ? paginaLocal(nome) : await paginaWeb(url);
+        if (!pagina.content) throw new Error("Página indisponível");
+        if (empurrar) {
+          const endereco = modelosLocais ? "#" + new URLSearchParams({ tela: nome + url.search }) : url;
+          history.pushState(null, "", endereco);
         }
-        showPage(page);
-        await renderPage();
+        mostrarPagina(pagina);
+        await desenharPagina();
       }).catch(() => location.assign(url));
     }
 
-    document.addEventListener("click", event => {
-      const link = event.target.closest("a[href]");
-      if (!link || event.defaultPrevented || event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || link.target || link.getAttribute("href").startsWith("#")) return;
+    document.addEventListener("click", evento => {
+      const link = evento.target.closest("a[href]");
+      if (!link || evento.defaultPrevented || evento.button || evento.ctrlKey || evento.metaKey || evento.shiftKey || evento.altKey || link.target || link.getAttribute("href").startsWith("#")) return;
       const url = new URL(link.href);
-      if (new URL("./", url).href === directory.href && pages.has(url.pathname.split("/").pop())) {
-        event.preventDefault();
-        navigate(url, true);
+      if (new URL("./", url).href === diretorio.href && paginas.has(url.pathname.split("/").pop())) {
+        evento.preventDefault();
+        navegar(url, true);
       }
     });
-    document.addEventListener("submit", event => {
-      const form = event.target;
-      if (!form.matches("form[role=search]")) return;
-      event.preventDefault();
-      const url = new URL("explorar.html", directory);
-      url.search = new URLSearchParams(new FormData(form)).toString();
-      navigate(url, true);
+    document.addEventListener("submit", evento => {
+      const formulario = evento.target;
+      if (!formulario.matches("form[role=search]")) return;
+      evento.preventDefault();
+      const url = new URL("explorar.html", diretorio);
+      url.search = new URLSearchParams(new FormData(formulario)).toString();
+      navegar(url, true);
     });
-    window.addEventListener("popstate", () => navigate(pageAddress(), false));
+    window.addEventListener("popstate", () => navegar(enderecoPagina(), false));
   }
-  return { keepPlayerOnNavigation, pageAddress };
+  return { manterPlayerNaNavegacao, enderecoPagina };
 })();

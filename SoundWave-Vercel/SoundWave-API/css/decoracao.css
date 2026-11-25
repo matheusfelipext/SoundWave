@@ -1,9 +1,3 @@
-/* =====================================================================
-   Decoração — gradientes, vidro fosco e brilhos.
-   Este arquivo só "enfeita": ele refina regras dos arquivos anteriores.
-   Se quiser um visual mais simples, basta tirar a linha dele do estilo.css.
-   ===================================================================== */
-
 /* Gradiente principal da marca (usado em botões, títulos e detalhes) */
 :root {
   --gradiente-marca: linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
@@ -12,7 +6,6 @@
   --vidro: rgba(255, 255, 255, 0.72);
 }
 
-/* ---- Fundo da página: manchas de cor desfocadas que flutuam devagar ---- */
 body {
   background: var(--fundo-pagina);
   position: relative;
@@ -40,7 +33,6 @@ body::after {
 }
 @keyframes flutuar { to { transform: translate(-6vw, 5vw) scale(1.15); } }
 
-/* ---- Barra superior, menu e player viram "vidro fosco" ---- */
 .barra-superior, .menu-lateral, .player {
   background: var(--vidro);
   backdrop-filter: blur(18px) saturate(160%);
@@ -81,7 +73,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
 .perfil img { outline: 2px solid transparent; outline-offset: 2px; transition: outline-color var(--transicao); }
 .perfil:hover img { outline-color: var(--cor-secundaria); }
 
-/* ---- Menu lateral: item ativo vira uma pílula em gradiente ---- */
 .menu-item[aria-current="page"] {
   background: var(--gradiente-marca);
   color: #fff;
@@ -90,7 +81,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
 .menu-item:not([aria-current="page"]):hover { background: var(--gradiente-marca-suave); }
 .menu-item img { box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); }
 
-/* ---- Destaque: gradiente animado por cima da imagem ---- */
 .destaque { box-shadow: 0 25px 60px rgba(99, 102, 241, 0.25); }
 .destaque::before {
   background:
@@ -115,7 +105,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
 @keyframes girar { to { transform: rotate(360deg); } }
 .destaque-tipo { color: #f5d0fe; }
 
-/* ---- Botões em gradiente, com brilho e deslize de cor no hover ---- */
 .botao-principal, .botao-tocar, .estacao-play {
   background: var(--gradiente-marca);
   background-size: 200% 200%;
@@ -127,7 +116,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
   box-shadow: 0 14px 36px rgba(236, 72, 153, 0.4);
 }
 
-/* ---- Títulos de seção com um traço colorido ---- */
 .secao h2, .titulo-pagina {
   position: relative;
   padding-left: 16px;
@@ -147,7 +135,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
   color: transparent;
 }
 
-/* ---- Cartões: borda em gradiente e brilho ao passar o mouse ---- */
 .cartao, .acesso-rapido, .estacao, .lista-musicas, .medidor {
   position: relative;
   background: var(--vidro);
@@ -194,7 +181,6 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
 }
 .genero:hover::after { transform: translateX(100%); }
 
-/* ---- Lista: música tocando fica com fundo em gradiente suave ---- */
 .musica.tocando { background: var(--gradiente-marca-suave); }
 .musica.tocando .musica-titulo {
   background: var(--gradiente-marca);
@@ -204,12 +190,10 @@ html:has(#tema-escuro:checked) .interruptor { background: var(--gradiente-marca)
 }
 .equalizador i { background: var(--gradiente-marca); }
 
-/* ---- Player: capa com brilho e barras em gradiente ---- */
 .player-musica img { box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35); }
 .volume-barra span, .volume-barra span::after { background: var(--gradiente-marca); }
 .medidor-barra span { background: var(--gradiente-marca); }
 
-/* ---- Tema escuro: vidro mais escuro e manchas mais fortes ---- */
 html:has(#tema-escuro:checked) {
   --vidro: rgba(17, 24, 39, 0.72);
   --brilho: 0 10px 30px rgba(139, 92, 246, 0.45);

@@ -1,51 +1,51 @@
-SoundWave.deviceMusic = (() => {
+SoundWave.musicasDispositivo = (() => {
   "use strict";
-  let database;
+  let bancoDados;
 
-  function openLibrary() {
-    if (!database) database = new Promise((resolve, reject) => {
-      const request = indexedDB.open("soundwave-local-library", 1);
-      request.onupgradeneeded = () => request.result.createObjectStore("tracks", { keyPath: "id" });
-      request.onsuccess = () => {
-        const db = request.result;
-        db.onversionchange = () => { db.close(); database = null; };
+  function abrirBiblioteca() {
+    if (!bancoDados) bancoDados = new Promise((resolve, reject) => {
+      const requisitar = indexedDB.open("soundwave-local-library", 1);
+      requisitar.onupgradeneeded = () => requisitar.result.createObjectStore("tracks", { keyPath: "id" });
+      requisitar.onsuccess = () => {
+        const db = requisitar.result;
+        db.onversionchange = () => { db.close(); bancoDados = null; };
         resolve(db);
       };
-      request.onerror = () => reject(request.error);
-    }).catch(error => { database = null; throw error; });
-    return database;
+      requisitar.onerror = () => reject(requisitar.error);
+    }).catch(erro => { bancoDados = null; throw erro; });
+    return bancoDados;
   }
 
-  async function transaction(mode, operation) {
-    const db = await openLibrary();
+  async function transaction(modo, operacao) {
+    const db = await abrirBiblioteca();
     return new Promise((resolve, reject) => {
-      const tx = db.transaction("tracks", mode);
-      const result = operation(tx.objectStore("tracks"));
-      tx.oncomplete = () => resolve(result());
+      const tx = db.transaction("tracks", modo);
+      const resultado = operacao(tx.objectStore("tracks"));
+      tx.oncomplete = () => resolve(resultado());
       tx.onabort = () => reject(tx.error || new Error("A gravação foi interrompida."));
     });
   }
 
-  function importFiles(files) {
-    return transaction("readwrite", store => {
-      let added = 0;
-      for (const file of files) {
-        const name = file.name.replace(/\.[^.]+$/, "");
-        const parts = name.split(" - ");
-        const artist = parts.length > 1 ? parts.shift().trim() : "Arquivo do dispositivo";
-        const id = [file.name, file.size, file.lastModified].join("::");
-        const request = store.add({ id, title: parts.join(" - ").trim() || file.name, artist, file });
-        request.onsuccess = () => added++;
-        request.onerror = event => {
-          if (request.error.name === "ConstraintError") event.preventDefault();
+  function importarArquivos(arquivos) {
+    return transaction("readwrite", armazenamento => {
+      let adicionados = 0;
+      for (const arquivo of arquivos) {
+        const nome = arquivo.name.replace(/\.[^.]+$/, "");
+        const partes = nome.split(" - ");
+        const artista = partes.length > 1 ? partes.shift().trim() : "Arquivo do dispositivo";
+        const id = [arquivo.name, arquivo.size, arquivo.lastModified].join("::");
+        const requisitar = armazenamento.add({ id: id, title: partes.join(" - ").trim() || arquivo.name, artist: artista, file: arquivo });
+        requisitar.onsuccess = () => adicionados++;
+        requisitar.onerror = evento => {
+          if (requisitar.error.name === "ConstraintError") evento.preventDefault();
         };
       }
-      return () => added;
+      return () => adicionados;
     });
   }
 
-  class DevicePlayer {
-    constructor(onChange, onError) {
+  class TocadorDispositivo {
+    constructor(aoMudar, aoErrar) {
       this.audio = new Audio();
       this.audio.volume = 0.75;
       this.tracks = [];
@@ -53,27 +53,27 @@ SoundWave.deviceMusic = (() => {
       this.shuffle = false;
       this.repeat = "off";
       this.url = "";
-      for (const event of ["playing", "pause", "timeupdate", "loadedmetadata", "durationchange"]) {
-        this.audio.addEventListener(event, onChange);
+      for (const evento of ["playing", "pause", "timeupdate", "loadedmetadata", "durationchange"]) {
+        this.audio.addEventListener(evento, aoMudar);
       }
       this.audio.addEventListener("ended", () => {
-        if (this.repeat === "track") this.play(this.current).catch(onError);
-        else if (this.repeat === "context" || this.index < this.tracks.length - 1) this.next().catch(onError);
-        else onChange();
+        if (this.repeat === "track") this.play(this.current).catch(aoErrar);
+        else if (this.repeat === "context" || this.index < this.tracks.length - 1) this.next().catch(aoErrar);
+        else aoMudar();
       });
       this.audio.addEventListener("error", () => {
-        if (this.current) onError(new Error("O navegador não conseguiu reproduzir este arquivo."));
+        if (this.current) aoErrar(new Error("O navegador não conseguiu reproduzir este arquivo."));
       });
     }
 
-    get index() { return this.tracks.findIndex(track => track.id === this.current?.id); }
+    get index() { return this.tracks.findIndex(musica => musica.id === this.current?.id); }
     get duration() { return (this.audio.duration || 0) * 1000; }
 
-    async play(track) {
-      if (!track) return;
+    async play(musica) {
+      if (!musica) return;
       this.stop();
-      this.current = track;
-      this.url = URL.createObjectURL(track.file);
+      this.current = musica;
+      this.url = URL.createObjectURL(musica.file);
       this.audio.src = this.url;
       await this.audio.play();
     }
@@ -91,13 +91,13 @@ SoundWave.deviceMusic = (() => {
 
     toggle() { return this.audio.paused ? this.audio.play() : this.audio.pause(); }
     next() {
-      const count = this.tracks.length;
-      const step = this.shuffle && count > 1 ? 1 + Math.floor(Math.random() * (count - 1)) : 1;
-      return this.play(this.tracks[(this.index + step) % count]);
+      const quantidade = this.tracks.length;
+      const passo = this.shuffle && quantidade > 1 ? 1 + Math.floor(Math.random() * (quantidade - 1)) : 1;
+      return this.play(this.tracks[(this.index + passo) % quantidade]);
     }
     previous() { return this.play(this.tracks[(this.index + this.tracks.length - 1) % this.tracks.length]); }
     async seek(ms) { this.audio.currentTime = ms / 1000; }
-    async setVolume(value) { this.audio.volume = value; }
+    async setVolume(valor) { this.audio.volume = valor; }
     toggleShuffle() { this.shuffle = !this.shuffle; return this.shuffle; }
     cycleRepeat() {
       this.repeat = this.repeat === "off" ? "context" : this.repeat === "context" ? "track" : "off";
@@ -105,81 +105,81 @@ SoundWave.deviceMusic = (() => {
     }
   }
 
-  async function mountDownloads(section, player, onPlay, onRemove) {
-    if (section.dataset.mounted) return;
-    section.dataset.mounted = "true";
-    const input = section.querySelector("input");
-    const list = section.querySelector("ul");
-    const status = section.querySelector("[role=status]");
-    const showError = error => {
-      status.textContent = error.name === "QuotaExceededError" ? "Não há espaço suficiente no navegador para salvar esses arquivos."
-        : "Não foi possível acessar as músicas neste navegador. " + error.message;
+  async function montarDownloads(secao, tocador, aoTocar, aoRemover) {
+    if (secao.dataset.mounted) return;
+    secao.dataset.mounted = "true";
+    const campo = secao.querySelector("input");
+    const lista = secao.querySelector("ul");
+    const status = secao.querySelector("[role=status]");
+    const mostrarErro = erro => {
+      status.textContent = erro.name === "QuotaExceededError" ? "Não há espaço suficiente no navegador para salvar esses arquivos."
+        : "Não foi possível acessar as músicas neste navegador. " + erro.message;
     };
 
     async function refresh() {
-      const tracks = await transaction("readonly", store => {
-        const request = store.getAll();
-        return () => request.result;
+      const musicas = await transaction("readonly", armazenamento => {
+        const requisitar = armazenamento.getAll();
+        return () => requisitar.result;
       });
-      if (!section.isConnected) return;
-      player.tracks = tracks.sort((a, b) => a.title.localeCompare(b.title, "pt-BR"));
-      list.replaceChildren();
-      if (!tracks.length) {
-        const empty = document.createElement("li");
-        empty.textContent = "Nenhum arquivo importado.";
-        list.append(empty);
+      if (!secao.isConnected) return;
+      tocador.tracks = musicas.sort((a, b) => a.title.localeCompare(b.title, "pt-BR"));
+      lista.replaceChildren();
+      if (!musicas.length) {
+        const vazio = document.createElement("li");
+        vazio.textContent = "Nenhum arquivo importado.";
+        lista.append(vazio);
       }
-      for (const track of tracks) {
-        const row = document.createElement("li");
-        const play = document.createElement("button");
-        play.type = "button";
-        play.className = "spotify-play-inline";
-        play.setAttribute("aria-label", "Tocar " + track.title);
-        play.textContent = "▶";
-        play.onclick = () => onPlay(track).catch(showError);
-        const text = document.createElement("div");
-        const title = document.createElement("strong");
-        const artist = document.createElement("small");
-        title.textContent = track.title;
-        artist.textContent = track.artist;
-        text.append(title, artist);
-        const remove = document.createElement("button");
-        remove.type = "button";
-        remove.textContent = "Remover";
-        remove.setAttribute("aria-label", "Remover " + track.title + " do SoundWave");
-        remove.onclick = async () => {
-          remove.disabled = true;
+      for (const musica of musicas) {
+        const linha = document.createElement("li");
+        const tocar = document.createElement("button");
+        tocar.type = "button";
+        tocar.className = "spotify-play-inline";
+        tocar.setAttribute("aria-label", "Tocar " + musica.title);
+        tocar.textContent = "▶";
+        tocar.onclick = () => aoTocar(musica).catch(mostrarErro);
+        const texto = document.createElement("div");
+        const titulo = document.createElement("strong");
+        const artista = document.createElement("small");
+        titulo.textContent = musica.title;
+        artista.textContent = musica.artist;
+        texto.append(titulo, artista);
+        const remover = document.createElement("button");
+        remover.type = "button";
+        remover.textContent = "Remover";
+        remover.setAttribute("aria-label", "Remover " + musica.title + " do SoundWave");
+        remover.onclick = async () => {
+          remover.disabled = true;
           try {
-            await transaction("readwrite", store => { store.delete(track.id); return () => null; });
-            if (track.id === player.current?.id) onRemove();
+            await transaction("readwrite", armazenamento => { armazenamento.delete(musica.id); return () => null; });
+            if (musica.id === tocador.current?.id) aoRemover();
             await refresh();
             status.textContent = "Arquivo removido da biblioteca do SoundWave.";
-          } catch (error) { remove.disabled = false; showError(error); }
+          } catch (erro) { remover.disabled = false; mostrarErro(erro); }
         };
-        row.append(play, text, remove);
-        list.append(row);
+        linha.append(tocar, texto, remover);
+        lista.append(linha);
       }
     }
 
-    input.addEventListener("change", async () => {
-      const selected = Array.from(input.files);
-      if (!selected.length) return;
-      input.disabled = true;
+    campo.addEventListener("change", async () => {
+      const selecionados = Array.from(campo.files);
+      if (!selecionados.length) return;
+      campo.disabled = true;
       status.textContent = "Salvando arquivos…";
-      const files = selected.filter(file => file.size && (file.type.startsWith("audio/") || /\.(mp3|m4a|aac|wav|flac|ogg|opus|weba|aif|aiff)$/i.test(file.name)));
+      const arquivos = selecionados.filter(arquivo => arquivo.size && (arquivo.type.startsWith("audio/") || /\.(mp3|m4a|aac|wav|flac|ogg|opus|weba|aif|aiff)$/i.test(arquivo.name)));
       try {
-        const added = files.length ? await importFiles(files) : 0;
+        const adicionados = arquivos.length ? await importarArquivos(arquivos) : 0;
         await refresh();
-        const duplicates = files.length - added;
-        const skipped = selected.length - files.length;
-        status.textContent = "Arquivos adicionados: " + added + "." + (duplicates ? " Já salvos: " + duplicates + "." : "") + (skipped ? " Ignorados (vazios ou sem áudio): " + skipped + "." : "");
-      } catch (error) { showError(error); }
-      finally { input.disabled = false; input.value = ""; }
+        const duplicados = arquivos.length - adicionados;
+        const ignorados = selecionados.length - arquivos.length;
+        status.textContent = "Arquivos adicionados: " + adicionados + "." + (duplicados ? " Já salvos: " + duplicados + "." : "") + (ignorados ? " Ignorados (vazios ou sem áudio): " + ignorados + "." : "");
+      } catch (erro) { mostrarErro(erro); }
+      finally { campo.disabled = false; campo.value = ""; }
     });
-    try { await refresh(); } catch (error) { showError(error); }
+    try { await refresh(); } catch (erro) { mostrarErro(erro); }
   }
 
   return {
-    DevicePlayer, mountDownloads
+    TocadorDispositivo, montarDownloads
   };
 })();

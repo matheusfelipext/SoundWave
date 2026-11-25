@@ -1,58 +1,58 @@
-SoundWave.library = (() => {
+SoundWave.biblioteca = (() => {
   "use strict";
-  const { getPlaylists, getPlaylist, getPlaylistItems, getSavedTracks, getRecentlyPlayed } = SoundWave.api;
+  const { obterPlaylists, obterPlaylist, obterItensPlaylist, obterMusicasSalvas, obterTocadasRecentemente } = SoundWave.api;
 
-  async function loadSavedTracksPage(offset = 0) {
-    const response = await getSavedTracks(offset);
+  async function carregarPaginaMusicasSalvas(deslocamento = 0) {
+    const resposta = await obterMusicasSalvas(deslocamento);
     return {
-      tracks: (response?.items || []).map((entry) => entry.track).filter((track) => track && !track.is_local),
-      nextOffset: response?.next ? Number(response.offset || 0) + Number(response.limit || 10) : null,
-      total: response?.total || 0
+      tracks: (resposta?.items || []).map((entrada) => entrada.track).filter((musica) => musica && !musica.is_local),
+      nextOffset: resposta?.next ? Number(resposta.offset || 0) + Number(resposta.limit || 10) : null,
+      total: resposta?.total || 0
     };
   }
 
-  async function loadRecentTracks() {
-    const response = await getRecentlyPlayed();
-    return (response?.items || []).map((entry) => entry.track).filter((track) => track && !track.is_local);
+  async function carregarMusicasRecentes() {
+    const resposta = await obterTocadasRecentemente();
+    return (resposta?.items || []).map((entrada) => entrada.track).filter((musica) => musica && !musica.is_local);
   }
 
-  async function loadPlaylistsPage(offset = 0) {
-    const response = await getPlaylists(offset);
+  async function carregarPaginaPlaylists(deslocamento = 0) {
+    const resposta = await obterPlaylists(deslocamento);
     return {
-      playlists: (response?.items || []).filter(playlist => playlist?.id),
-      nextOffset: response?.next ? Number(response.offset || 0) + Number(response.limit || 10) : null
+      playlists: (resposta?.items || []).filter(playlist => playlist?.id),
+      nextOffset: resposta?.next ? Number(resposta.offset || 0) + Number(resposta.limit || 10) : null
     };
   }
 
-  async function loadPlaylistTracks(id) {
-    const playlist = await getPlaylist(id);
-    let page = null;
-    let warning = "";
+  async function carregarMusicasPlaylist(id) {
+    const playlist = await obterPlaylist(id);
+    let pagina = null;
+    let alerta = "";
     try {
-      page = await getPlaylistItems(id);
-    } catch (error) {
-      if (error.status !== 403) throw error;
-      warning = error.message;
+      pagina = await obterItensPlaylist(id);
+    } catch (erro) {
+      if (erro.status !== 403) throw erro;
+      alerta = erro.message;
     }
-    const items = page?.items || playlist?.items?.items || [];
+    const itens = pagina?.items || playlist?.items?.items || [];
     return {
-      playlist,
-      tracks: items.map((entry) => entry?.item || entry?.track).filter((track) => track && track.type === "track" && !track.is_local),
-      nextOffset: page?.next ? Number(page.offset || 0) + Number(page.limit || 10) : null,
-      contentsAvailable: Array.isArray(page?.items) || Array.isArray(playlist?.items?.items),
-      warning
+      playlist: playlist,
+      tracks: itens.map((entrada) => entrada?.item || entrada?.track).filter((musica) => musica && musica.type === "track" && !musica.is_local),
+      nextOffset: pagina?.next ? Number(pagina.offset || 0) + Number(pagina.limit || 10) : null,
+      contentsAvailable: Array.isArray(pagina?.items) || Array.isArray(playlist?.items?.items),
+      warning: alerta
     };
   }
 
-  async function loadPlaylistTracksPage(id, offset) {
-    const page = await getPlaylistItems(id, offset);
+  async function carregarPaginaMusicasPlaylist(id, deslocamento) {
+    const pagina = await obterItensPlaylist(id, deslocamento);
     return {
-      tracks: (page?.items || []).map((entry) => entry?.item || entry?.track).filter((track) => track && track.type === "track" && !track.is_local),
-      nextOffset: page?.next ? Number(page.offset || 0) + Number(page.limit || 10) : null
+      tracks: (pagina?.items || []).map((entrada) => entrada?.item || entrada?.track).filter((musica) => musica && musica.type === "track" && !musica.is_local),
+      nextOffset: pagina?.next ? Number(pagina.offset || 0) + Number(pagina.limit || 10) : null
     };
   }
 
   return {
-    loadSavedTracksPage, loadRecentTracks, loadPlaylistsPage, loadPlaylistTracks, loadPlaylistTracksPage
+    carregarPaginaMusicasSalvas, carregarMusicasRecentes, carregarPaginaPlaylists, carregarMusicasPlaylist, carregarPaginaMusicasPlaylist
   };
 })();

@@ -1,4 +1,3 @@
-/* 5. Conteúdo --------------------------------------------------------- */
 .conteudo {
   margin-left: var(--largura-menu);
   padding: calc(var(--altura-barra) + 24px) 32px calc(var(--altura-player) + 32px);
@@ -40,7 +39,7 @@
 .ver-tudo { color: var(--cor-principal); font-weight: 500; }
 .ver-tudo:hover { color: var(--cor-principal-escura); text-decoration: underline; }
 
-/* Grades: a quantidade de colunas muda com a largura (ver seção 8) */
+/* Grades: a quantidade de colunas muda com a largura (ver responsivo.css) */
 .grade { display: grid; gap: 24px; }
 .grade-6 { grid-template-columns: repeat(6, 1fr); gap: 16px; }
 .grade-5 { grid-template-columns: repeat(5, 1fr); }
